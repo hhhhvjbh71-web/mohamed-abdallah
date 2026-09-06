@@ -82,15 +82,15 @@
 
       <form id="loginForm" class="auth-form" novalidate>
 
-        <!-- رقم الهاتف -->
+        <!-- رقم الهاتف أو اسم المستخدم -->
         <div class="form-group">
           <label for="loginPhone" class="form-label">
-            <span>رقم الهاتف المسجل</span>
+            <span>رقم الهاتف أو اسم المستخدم</span>
             <span class="required-star">*</span>
           </label>
           <div class="input-wrapper">
-            <input type="tel" id="loginPhone" class="form-input phone-input" placeholder="01xxxxxxxxx" maxlength="11"
-              required autocomplete="tel">
+            <input type="text" id="loginPhone" class="form-input" placeholder="01xxxxxxxxx أو admin" maxlength="20"
+              required autocomplete="username">
             <span class="input-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path
@@ -99,7 +99,7 @@
               </svg>
             </span>
           </div>
-          <span class="field-hint">رقم هاتفك المكون من 11 رقماً.</span>
+          <span class="field-hint">رقم هاتفك المسجل أو admin للدخول للإدارة.</span>
         </div>
 
         <!-- كلمة المرور (6 أرقام) -->

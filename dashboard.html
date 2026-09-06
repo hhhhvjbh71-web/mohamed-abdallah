@@ -5139,7 +5139,7 @@ async function saveNewLesson(){
   // ✅ إعادة تهيئة الزرار بعد الحفظ
   var sbtn = document.getElementById('saveLessonBtn');
   if(sbtn){ sbtn.disabled = false; sbtn.textContent = 'حفظ الدرس ✅'; }
-}
+}                                                                                                                                                  
 
 // ============================================================
 // ===== EARNINGS TABLE =====
@@ -5149,7 +5149,7 @@ function renderEarningsTable() {
   const users      = getUsers();
   const tbody      = document.getElementById('earningsTableBody');
   const cardsEl    = document.getElementById('earningsSummaryCards');
-  if(!tbody) return;
+  if(!tbody) return;     
 
   if(!allCourses.length) {
     tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="icon">📚</div><p>لا توجد كورسات بعد</p></div></td></tr>';

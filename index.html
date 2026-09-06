@@ -592,10 +592,47 @@
       <div class="footer-bottom">
         <p>جميع الحقوق محفوظة © 2026 لمنصة <strong>دكتور محمد عبد الله - عميد الفيزياء</strong></p>
         <p style="direction: ltr; font-size: 0.8rem; color: var(--text-muted);">Crafted for Physics Excellence</p>
+        <div style="margin-top: 10px; font-size: 0.75rem;">
+          <a href="javascript:void(0)" onclick="openAdminModal()" style="color: var(--text-muted); text-decoration: none; opacity: 0.45; transition: all 0.2s; font-family: monospace; font-size: 0.82rem; letter-spacing: 1px; padding: 4px 8px; border-radius: 4px;" onmouseover="this.style.color='#38bdf8'; this.style.opacity='1'; this.style.background='rgba(56,189,248,0.08)';" onmouseout="this.style.color='var(--text-muted)'; this.style.opacity='0.45'; this.style.background='transparent';" title="لوحة التحكم">
+            admin
+          </a>
+        </div>
       </div>
 
     </div>
   </footer>
+
+  <!-- نافذة طلب كلمة المرور للإدارة (Admin Modal) -->
+  <div id="adminAuthModal" onclick="if(event.target===this) closeAdminModal()" style="display: none; position: fixed; inset: 0; background: rgba(5, 10, 20, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 999999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #111827; border: 1.5px solid #1e293b; border-radius: 16px; width: 100%; max-width: 380px; padding: 28px 24px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative;">
+      
+      <button type="button" onclick="closeAdminModal()" style="position: absolute; top: 14px; left: 14px; background: rgba(255,255,255,0.06); border: none; color: #94a3b8; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'; this.style.color='#ef4444';" onmouseout="this.style.background='rgba(255,255,255,0.06)'; this.style.color='#94a3b8';">
+        ✕
+      </button>
+
+      <div style="font-size: 2.4rem; margin-bottom: 8px;">🔐</div>
+      <h3 style="font-size: 1.3rem; font-weight: 800; color: #f8fafc; margin: 0 0 6px 0; font-family: inherit;">لوحة التحكم (الإدارة)</h3>
+      <p style="color: #94a3b8; font-size: 0.9rem; margin: 0 0 20px 0;">أدخل كلمة المرور للدخول إلى إدارة المنصة</p>
+      
+      <form onsubmit="handleAdminAuth(event)">
+        <div style="margin-bottom: 16px;">
+          <input type="password" id="adminModalPassword" placeholder="••••••" maxlength="20"
+            style="width: 100%; box-sizing: border-box; padding: 12px 16px; background: #0b1220; border: 2px solid #1e293b; border-radius: 10px; color: #38bdf8; text-align: center; font-size: 1.3rem; letter-spacing: 4px; outline: none; transition: border-color 0.2s;"
+            onfocus="this.style.borderColor='#38bdf8';" onblur="this.style.borderColor='#1e293b';"
+            required autofocus autocomplete="current-password">
+          <div id="adminModalError" style="color: #ef4444; font-size: 0.84rem; margin-top: 8px; display: none; font-weight: 700;">❌ كلمة المرور غير صحيحة!</div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button type="submit" style="flex: 1; padding: 12px; background: #0284c7; border: none; border-radius: 10px; color: #ffffff; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s; font-family: inherit;" onmouseover="this.style.background='#0369a1';" onmouseout="this.style.background='#0284c7';">
+            دخول للداشبورد 🚀
+          </button>
+          <button type="button" onclick="closeAdminModal()" style="padding: 12px 18px; background: transparent; border: 1.5px solid #334155; border-radius: 10px; color: #94a3b8; font-weight: 600; font-size: 0.95rem; cursor: pointer; font-family: inherit;">
+            إلغاء
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- نافذة الكورس المنبثقة (Modal) -->
   <div class="modal-backdrop" id="courseModal">
@@ -631,5 +668,69 @@
   <script src="firebase-config.js"></script>
   <script src="grade-mapping.js"></script>
   <script src="main.js"></script>
+
+  <script>
+    function openAdminModal() {
+      const modal = document.getElementById('adminAuthModal');
+      const input = document.getElementById('adminModalPassword');
+      const err = document.getElementById('adminModalError');
+      if (err) err.style.display = 'none';
+      if (input) {
+        input.value = '';
+        input.style.borderColor = '#1e293b';
+      }
+      if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(() => { if (input) input.focus(); }, 100);
+      }
+    }
+
+    function closeAdminModal() {
+      const modal = document.getElementById('adminAuthModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAdminModal();
+    });
+
+    function handleAdminAuth(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('adminModalPassword');
+      const err = document.getElementById('adminModalError');
+      const pass = (input ? input.value : '').replace(/\s+/g, '').trim();
+
+      if (pass === '202020') {
+        const adminUser = {
+          id: 'admin_dr_mohamed',
+          name: 'د. محمد عبد الله (الإدارة)',
+          phone: 'admin',
+          role: 'admin',
+          isAdmin: true,
+          isActive: true,
+          grade: 'all',
+          governorate: 'القيادة والتحكم',
+          enrolledCourses: ['all']
+        };
+        localStorage.setItem('physics_current_user', JSON.stringify(adminUser));
+        localStorage.setItem('physics_session_id', 'admin_dr_mohamed');
+        localStorage.setItem('dr_is_admin', 'true');
+        localStorage.setItem('alsaqr_admin_logged', 'true');
+        // المفتاح اللي بيدور عليه dashboard.html
+        localStorage.setItem('alsaqr_current_user', JSON.stringify(adminUser));
+        
+        // التوجيه الفوري لملف dashboard.html
+        window.location.href = 'dashboard.html';
+      } else {
+        if (err) err.style.display = 'block';
+        if (input) {
+          input.style.borderColor = '#ef4444';
+          input.select();
+        }
+      }
+    }
+  </script>
 </body>
 </html>

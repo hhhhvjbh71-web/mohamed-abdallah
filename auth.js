@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. تقييد أرقام الهواتف بألا تتجاوز 11 رقماً وأن تكون أرقاماً فقط
+   1. تقييد أرقام الهواتف في التسجيل بألا تتجاوز 11 رقماً وأن تكون أرقاماً فقط
    ========================================================================== */
 function initPhoneInputsRestriction() {
-  const phoneInputs = document.querySelectorAll('input[type="tel"], .phone-input');
+  const phoneInputs = document.querySelectorAll('#regPhone, #regParentPhone, .phone-input:not(#loginPhone)');
   phoneInputs.forEach(input => {
     input.setAttribute('maxlength', '11');
     input.setAttribute('inputmode', 'numeric');
@@ -305,6 +305,32 @@ function initLoginForm() {
 
     if (!isValid) return;
 
+    // التحقق من حساب الإدارة والمشرف (Admin)
+    if (phoneVal.toLowerCase() === 'admin' && passwordVal === '202020') {
+      setBtnLoading(submitBtn, true, 'جاري الدخول للإدارة...');
+      const adminUser = {
+        id: 'admin_dr_mohamed',
+        name: 'د. محمد عبد الله (الإدارة)',
+        phone: 'admin',
+        role: 'admin',
+        isAdmin: true,
+        isActive: true,
+        grade: 'all',
+        governorate: 'القيادة والتحكم',
+        enrolledCourses: ['all']
+      };
+      localStorage.setItem('physics_current_user', JSON.stringify(adminUser));
+      localStorage.setItem('physics_session_id', 'admin_dr_mohamed');
+      localStorage.setItem('dr_is_admin', 'true');
+      localStorage.setItem('alsaqr_admin_logged', 'true');
+
+      showToast('⚡ مرحباً بك يا دكتور! جاري نقلك إلى لوحة التحكم...', 'success');
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 700);
+      return;
+    }
+
     setBtnLoading(submitBtn, true, 'جاري التحقق...');
 
     try {
@@ -459,7 +485,15 @@ function redirectAfterAuth() {
   const returnUrl = urlParams.get('returnUrl');
   if (returnUrl) {
     window.location.href = decodeURIComponent(returnUrl);
-  } else {
-    window.location.href = 'index.html';
+    return;
   }
+  // لو المستخدم أدمن يروح على لوحة التحكم مباشرة
+  try {
+    const currentUser = JSON.parse(localStorage.getItem('physics_current_user') || '{}');
+    if (currentUser.role === 'admin' || currentUser.isAdmin) {
+      window.location.href = 'dashboard.html';
+      return;
+    }
+  } catch(e) {}
+  window.location.href = 'index.html';
 }

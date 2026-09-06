@@ -627,3 +627,26 @@ window.showToast = function(message, type = 'info', duration = 3500) {
     }, 300);
   }, duration);
 };
+
+/* ==========================================================================
+   الدخول السريع للوحة التحكم للإدارة (Admin Quick Login)
+   ========================================================================== */
+window.enterAdminDashboard = function() {
+  const adminUser = {
+    id: 'admin_dr_mohamed',
+    name: 'د. محمد عبد الله (الإدارة)',
+    phone: 'admin',
+    role: 'admin',
+    isAdmin: true,
+    isActive: true,
+    grade: 'all',
+    governorate: 'القيادة والتحكم',
+    enrolledCourses: ['all']
+  };
+  localStorage.setItem('physics_current_user', JSON.stringify(adminUser));
+  localStorage.setItem('physics_session_id', 'admin_dr_mohamed');
+  localStorage.setItem('dr_is_admin', 'true');
+  localStorage.setItem('alsaqr_admin_logged', 'true');
+  window.location.href = 'dashboard.html';
+};
+
