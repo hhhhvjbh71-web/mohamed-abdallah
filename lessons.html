@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>محتوى الكورس | دكتور محمد عبد الله - عميد الفيزياء</title>
+  <meta name="description" content="مشاهدة دروس وفيديوهات الكورس على منصة دكتور محمد عبد الله عميد الفيزياء">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><circle cx='12' cy='12' r='3'/><path d='M20.2 20.2c2.4-2.4 2.4-6.3 0-8.7L13 4.3a1.5 1.5 0 0 0-2.1 0L3.8 11.5c-2.4 2.4-2.4 6.3 0 8.7 2.4 2.4 6.3 2.4 8.7 0l7.7-7.7'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg: #0b1220;
+      --bg2: #111827;
+      --card: #111827;
+      --card2: #1e293b;
+      --border: #1e2d40;
+      --text: #e2e8f0;
+      --text2: #94a3b8;
+      --text3: #64748b;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    [data-theme="light"] {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --accent: #d97706;
+      --bg: #f0f4f8;
+      --bg2: #ffffff;
+      --card: #ffffff;
+      --card2: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text2: #475569;
+      --text3: #94a3b8;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* HEADER */
+    .lessons-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 18, 32, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    [data-theme="light"] .lessons-header {
+      background: rgba(255, 255, 255, 0.92);
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+      cursor: pointer;
+      background: var(--card2);
+    }
+    .back-btn:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: rgba(14, 165, 233, 0.1);
+      transform: translateX(2px);
+    }
+    .header-course-title {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 800;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .header-badge.free {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .header-badge.paid {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .theme-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 18px;
+      transition: all 0.2s;
+    }
+    .theme-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: rotate(20deg);
+    }
+
+    /* LAYOUT */
+    .lessons-layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      min-height: calc(100vh - 64px);
+    }
+    @media (max-width: 1024px) {
+      .lessons-layout { grid-template-columns: 1fr; }
+      .lessons-sidebar { order: 2; }
+    }
+    @media (max-width: 640px) {
+      .lessons-layout { padding: 12px; gap: 16px; }
+      .header-inner { padding: 0; }
+      .header-course-title { font-size: 14px; }
+    }
+
+    /* VIDEO PLAYER */
+    .player-area {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .video-wrapper {
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 16/9;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .video-wrapper iframe, .video-wrapper video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      object-fit: contain;
+      background: #000;
+    }
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background: linear-gradient(135deg, #0b1220, #1e293b);
+      z-index: 5;
+    }
+    .play-icon {
+      width: 84px;
+      height: 84px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      color: #ffffff;
+      cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s;
+      box-shadow: 0 0 40px rgba(14, 165, 233, 0.4);
+      user-select: none;
+    }
+    .play-icon:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 60px rgba(14, 165, 233, 0.7);
+    }
+    .video-placeholder p {
+      color: var(--text2);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* NOW PLAYING CARD */
+    .now-playing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: var(--shadow);
+    }
+    .now-playing-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .now-playing-label::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+      animation: pulse-dot 1.5s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .now-playing-title {
+      font-size: 19px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      line-height: 1.4;
+      color: var(--text);
+    }
+    .now-playing-subtitle {
+      font-size: 14px;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-btns {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .nav-btn {
+      flex: 1;
+      padding: 11px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--text2);
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .nav-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(14, 165, 233, 0.1);
+      transform: translateY(-1px);
+    }
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* PDF CONTAINER */
+    .pdf-container {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .pdf-toolbar {
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card2);
+    }
+    .pdf-toolbar .pdf-name {
+      font-weight: 800;
+      font-size: 16px;
+      flex: 1;
+      color: var(--text);
+    }
+    .pdf-btn {
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: all 0.2s;
+      background: rgba(14, 165, 233, 0.12);
+      color: var(--primary);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pdf-btn:hover {
+      background: rgba(14, 165, 233, 0.25);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    .pdf-embed-wrap iframe {
+      width: 100%;
+      height: 560px;
+      border: none;
+      display: block;
+      background: #ffffff;
+    }
+
+    /* SIDEBAR */
+    .lessons-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .sidebar-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .course-info-card {
+      padding: 20px;
+    }
+    .course-thumbnail {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+    }
+    .course-info-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      line-height: 1.4;
+      color: var(--text);
+    }
+    .course-info-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .meta-chip {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 14px;
+      background: var(--card2);
+      color: var(--text2);
+      border: 1px solid var(--border);
+    }
+
+    /* PROGRESS */
+    .progress-bar-wrap {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--card2);
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text2);
+      margin-bottom: 8px;
+    }
+    .progress-bar {
+      height: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--success));
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    /* ACCORDION */
+    .sidebar-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sidebar-header h3 {
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .lessons-list {
+      padding: 10px;
+      max-height: 62vh;
+      overflow-y: auto;
+    }
+    .lessons-list::-webkit-scrollbar { width: 5px; }
+    .lessons-list::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+    .lesson-accordion {
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+      overflow: hidden;
+      background: var(--card2);
+    }
+    .lesson-accordion.open {
+      border-color: rgba(14, 165, 233, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+    .lesson-accordion-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s;
+      user-select: none;
+    }
+    .lesson-accordion.open .lesson-accordion-header {
+      background: rgba(14, 165, 233, 0.08);
+      border-bottom: 1px solid rgba(14, 165, 233, 0.15);
+    }
+    .lesson-accordion-header:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .lesson-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--text2);
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .lesson-accordion.open .lesson-num {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(14, 165, 233, 0.5);
+    }
+    .lesson-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .lesson-name {
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text);
+    }
+    .lesson-meta {
+      font-size: 12px;
+      color: var(--text3);
+      margin-top: 3px;
+      font-weight: 600;
+    }
+    .lesson-chevron {
+      color: var(--text3);
+      font-size: 13px;
+      transition: transform 0.3s ease, color 0.2s;
+      flex-shrink: 0;
+    }
+    .lesson-accordion.open .lesson-chevron {
+      transform: rotate(180deg);
+      color: var(--primary);
+    }
+    .lesson-content {
+      display: none;
+      background: rgba(0, 0, 0, 0.12);
+      padding: 6px 8px 10px;
+      flex-direction: column;
+      gap: 4px;
+      animation: fadeIn 0.25s ease;
+    }
+    .lesson-accordion.open .lesson-content {
+      display: flex;
+    }
+
+    /* CONTENT ITEMS */
+    .content-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--text2);
+      border: 1px solid transparent;
+    }
+    .content-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+    .content-item.active {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.16), rgba(2, 132, 199, 0.08)) !important;
+      color: var(--primary) !important;
+      border-color: rgba(14, 165, 233, 0.3);
+      font-weight: 700;
+      border-right: 3px solid var(--primary);
+    }
+    .ci-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+    .content-item.active .ci-icon {
+      background: rgba(14, 165, 233, 0.2);
+      border-color: var(--primary);
+    }
+    .content-item.type-pdf .ci-icon {
+      background: rgba(239, 68, 68, 0.1);
+    }
+    .ci-label {
+      font-size: 13px;
+      font-weight: 700;
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ci-duration {
+      font-size: 11px;
+      color: var(--text3);
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    /* ACTIVATION GATE */
+    .gate-wrap {
+      display: none;
+      padding: 40px 24px;
+      min-height: calc(100vh - 64px);
+      align-items: center;
+      justify-content: center;
+    }
+    .activation-gate {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 36px;
+      text-align: center;
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+      box-shadow: var(--shadow);
+      animation: zoomIn 0.35s ease;
+    }
+    .gate-icon {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: rgba(245, 158, 11, 0.1);
+      border: 2px solid rgba(245, 158, 11, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 24px;
+      animation: lock-pulse 2s ease infinite;
+    }
+    @keyframes lock-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.35); }
+      50% { box-shadow: 0 0 0 18px rgba(245, 158, 11, 0); }
+    }
+    .gate-title {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .gate-subtitle {
+      font-size: 14px;
+      color: var(--text2);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .gate-course-name {
+      display: inline-block;
+      background: rgba(14, 165, 233, 0.1);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      color: var(--primary);
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 15px;
+      margin-bottom: 28px;
+    }
+    .code-input-wrap {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .code-input {
+      flex: 1;
+      padding: 14px 18px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: 'Cairo', monospace;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .code-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    }
+    .code-input.error {
+      border-color: var(--danger);
+      animation: shake 0.4s ease;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .activate-btn {
+      padding: 14px 28px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 900;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+    }
+    .activate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(14, 165, 233, 0.45);
+    }
+    .activate-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .activation-error {
+      display: none;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 12px;
+      text-align: center;
+      animation: fadeIn 0.25s ease;
+    }
+    .activation-error.visible { display: block; }
+    .gate-help {
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text3);
+    }
+    .gate-help a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    /* LOADING / ERROR STATES */
+    .loading-state, .error-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 64px);
+      gap: 20px;
+      text-align: center;
+      padding: 24px;
+    }
+    .spinner {
+      width: 52px;
+      height: 52px;
+      border: 4px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text {
+      font-size: 16px;
+      color: var(--text2);
+      font-weight: 700;
+    }
+    .error-state .error-icon { font-size: 60px; }
+    .error-state h2 { font-size: 22px; font-weight: 900; }
+    .error-state p { font-size: 14px; color: var(--text2); max-width: 360px; line-height: 1.6; }
+    .error-state a {
+      padding: 11px 26px;
+      background: var(--primary);
+      color: white;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .error-state a:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    /* TOAST */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    .toast {
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      white-space: nowrap;
+      max-width: 90vw;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+    .toast.success { background: #064e3b; color: #6ee7b7; border: 1px solid rgba(110, 231, 183, 0.3); }
+    .toast.error { background: #450a0a; color: #fca5a5; border: 1px solid rgba(252, 165, 165, 0.3); }
+    .toast.info { background: #0c2a4a; color: #7dd3fc; border: 1px solid rgba(125, 211, 252, 0.3); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="lessons-header">
+    <div class="header-inner">
+      <button class="back-btn" onclick="goBackToPlatform()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+        رجوع للرئيسية
+      </button>
+      <div class="header-course-title" id="headerTitle">
+        <span>جاري التحميل...</span>
+      </div>
+      <span class="header-badge" id="headerBadge" style="display:none"></span>
+      <button class="theme-btn" onclick="toggleTheme()" title="تغيير المظهر (ليلي / نهاري)" id="themeBtn">🌙</button>
+    </div>
+  </header>
+
+  <!-- LOADING STATE -->
+  <div id="mainLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p class="loading-text">جاري جلب دروس ومحتوى الكورس...</p>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div id="mainError" class="error-state" style="display:none">
+    <div class="error-icon">⚠️</div>
+    <h2 id="errorTitle">حدث خطأ</h2>
+    <p id="errorMsg">لم نتمكن من تحميل بيانات الكورس المطلوب.</p>
+    <a href="index.html">العودة للصفحة الرئيسية</a>
+  </div>
+
+  <!-- ACTIVATION GATE (FOR PAID COURSES) -->
+  <div class="gate-wrap" id="activationGate">
+    <div class="activation-gate">
+      <div class="gate-icon">🔒</div>
+      <h1 class="gate-title">تفعيل الكورس مطلوب</h1>
+      <p class="gate-subtitle">هذا الكورس مدفوع. يرجى إدخال كود التفعيل الممنوح لك من قِبل المدرس للوصول المباشر لكافة الدروس والفيديوهات والملازم.</p>
+      <div class="gate-course-name" id="gateCourseTitle">—</div>
+      <div class="code-input-wrap">
+        <input type="text" id="activationCodeInput" class="code-input" placeholder="ادخل كود التفعيل هنا"
+          maxlength="25" autocomplete="off" autocapitalize="characters" spellcheck="false"
+          oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9\-]/g,'')"
+          onkeydown="if(event.key==='Enter')activateCourse()">
+        <button class="activate-btn" id="activateBtn" onclick="activateCourse()">🔑 تفعيل الكورس</button>
+      </div>
+      <div class="activation-error" id="activationError"></div>
+      <p class="gate-help">لا تمتلك كود تفعيل؟ <a href="index.html#courses">تواصل مع دكتور محمد عبد الله للاشتراك</a></p>
+    </div>
+  </div>
+
+  <!-- MAIN LESSONS LAYOUT -->
+  <div class="lessons-layout" id="lessonsLayout" style="display:none">
+    <!-- Main Player Area -->
+    <main class="player-area">
+      <div class="video-wrapper" id="videoWrapper">
+        <div class="video-placeholder" id="videoPlaceholder">
+          <div class="play-icon" onclick="tryPlayFirst()" title="تشغيل أول فيديو">▶</div>
+          <p>اضغط للتشغيل أو اختر درساً من القائمة</p>
+        </div>
+      </div>
+
+      <div class="now-playing-card" id="nowPlayingCard" style="display:none">
+        <div class="now-playing-label">يُعرض الآن</div>
+        <div class="now-playing-title" id="nowPlayingTitle">—</div>
+        <div class="now-playing-subtitle" id="nowPlayingSubtitle"></div>
+        <div class="nav-btns">
+          <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>
+            <span>←</span> العنصر السابق
+          </button>
+          <button class="nav-btn" id="nextBtn" onclick="navigate(1)" disabled>
+            العنصر التالي <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="pdf-container" id="pdfContainer" style="display:none">
+        <div class="pdf-toolbar">
+          <span style="font-size:24px">📄</span>
+          <span class="pdf-name" id="pdfName">ملزمة الدرس</span>
+          <a id="pdfLink" href="#" target="_blank" class="pdf-btn">فتح في نافذة مستقلة ↗</a>
+        </div>
+        <div class="pdf-embed-wrap">
+          <iframe id="pdfEmbed" title="عرض الملزمة PDF"></iframe>
+        </div>
+      </div>
+    </main>
+
+    <!-- Sidebar: Course Info, Progress & Accordion -->
+    <aside class="lessons-sidebar">
+      <div class="sidebar-card">
+        <div class="course-info-card">
+          <img id="courseThumbnail" class="course-thumbnail" src="" alt="غلاف الكورس" style="display:none">
+          <div class="course-info-title" id="sidebarTitle">—</div>
+          <div class="course-info-meta" id="courseMeta"></div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="progress-bar-wrap">
+          <div class="progress-labels">
+            <span>نسبة إنجاز الكورس</span>
+            <span id="progressLabel">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="sidebar-header">
+          <h3 id="lessonsCount">دروس الكورس</h3>
+          <span style="font-size:12px;color:var(--text3);font-weight:700" id="contentCount"></span>
+        </div>
+        <div class="lessons-list" id="lessonsList"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- FIREBASE SCRIPTS -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="grade-mapping.js"></script>
+
+  <script>
+  /* ============================================================
+     1. DEFAULT CURRICULUM COURSES (Rich Fallback Data)
+     تضمن فتح محتوى الكورس فوراً حتى لو لم ينشئ المدرس كورسات مخصصة بعد
+  ============================================================ */
+  const DEFAULT_COURSES = [
+    {
+      id: 'prep1',
+      title: 'أساسيات المادة والطاقة والحركة (أولى إعدادي)',
+      grade: 'prep-1',
+      type: 'free',
+      price: 0,
+      thumbnail: '',
+      lessons: [
+        {
+          id: 'l_prep1_1',
+          title: 'الدرس الأول: المادة وخواصها والتركيب الذري',
+          position: 0,
+          segments: [
+            { id: 's1', title: 'مفهوم المادة وحالاتها وحساب الكثافة', videoUrl: 'https://www.youtube.com/watch?v=k3rRrl9J2F4', duration: '18 دقيقة', position: 0 },
+            { id: 's2', title: 'مسائل تدريبية على الكتلة والحجم والكثافة', videoUrl: 'https://www.youtube.com/watch?v=SimPy4Lq9Qk', duration: '22 دقيقة', position: 1 }
+          ],
+          pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          pdfName: 'ملخص الدرس الأول - خواص المادة.pdf'
+        },
+        {
+          id: 'l_prep1_2',
+          title: 'الدرس الثاني: الطاقة ومصادرها وصورها وتحولاتها',
+          position: 1,
+          segments: [
+            { id: 's3', title: 'طاقة الوضع وطاقة الحركة والطاقة الميكانيكية', videoUrl: 'https://www.youtube.com/watch?v=7K4V0NvUxRg', duration: '25 دقيقة', position: 0 }
+          ],
+          pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          pdfName: 'ملزمة الطاقة والميكانيكا.pdf'
+        }
+      ]
+    },
+    {
+      id: 'prep2',
+      title: 'الحركة الدورية والموجات والضوء (تانية إعدادي)',
+      grade: 'prep-2',
+      type: 'paid',
+      price: 100,
+      lessons: [
+        {
+          id: 'l_prep2_1',
+          title: 'الدرس الأول: الحركة الاهتزازية والتردد وسعة الاهتزازة',
+          position: 0,
+          segments: [
+            { id: 's4', title: 'شرح الحركة التوافقية البسيطة والزمن الدوري', videoUrl: 'https://www.youtube.com/watch?v=k3rRrl9J2F4', duration: '26 دقيقة', position: 0 }
+          ],
+          pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          pdfName: 'ملزمة الحركة الاهتزازية وقوانينها.pdf'
+        },
+        {
+          id: 'l_prep2_2',
+          title: 'الدرس الثاني: الحركة الموجية وخصائص الموجات الصوتية',
+          position: 1,
+          segments: [
+            { id: 's5', title: 'أنواع الموجات الطولية والمستعرضة وسرعة انتشار الموجة', videoUrl: 'https://www.youtube.com/watch?v=SimPy4Lq9Qk', duration: '30 دقيقة', position: 0 }
+          ],
+          pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          pdfName: 'ملخص الموجات وسرعة الصوت.pdf'
+        }
+      ]
+    },
+    {
+      id: 'prep3',
+      title: 'السرعة المتجهة والفيزياء الكونية والكهربية (تالتة إعدادي)',
+      grade: 'prep-3',
+      type: 'paid',
+      price: 120,
+      lessons: [
+        {
+          id: 'l_prep3_1',
+          title: 'الدرس الأول: الحركة في اتجاه واحد ومفهوم السرعة المنتظمة',
+          position: 0,
+          segments: [
+            { id: 's6', title: 'السرعة القياسية والسرعة المتجهة والنسبية', videoUrl: 'https://www.youtube.com/watch?v=7K4V0NvUxRg', duration: '28 دقيقة', position: 0 },
+            { id: 's7', title: 'حل مسائل السرعة المتوسطة والتمثيل البياني', videoUrl: 'https://www.youtube.com/watch?v=k3rRrl9J2F4', duration: '22 دقيقة', position: 1 }
+          ],
+          pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          pdfName: 'ملزمة الشهادة الإعدادية - السرعة والعجلة.pdf'
+        }
+      ]
+    },
+    {
+      id: 'sec1',
+      title: 'الميكانيكا وقوانين الحركة وقوة نيوتن (أولى ثانوي)',
+      grade: 'sec-1',
+      type: 'free',
+      price: 0,
+      lessons: [
+        {
+          id: 'l_sec1_1',
+          title: 'الدرس الأول: القياس الفيزيائي وصيغ الأبعاد وأخطاء القياس',
+          position: 0,
+          segments: [
+            { id: 's8', title: 'الكميات الفيزيائية الأساسية والمشتقة ومعادلة الأبعاد', videoUrl: 'https://www.youtube.com/watch?v=SimPy4Lq9Qk', duration: '34 دقيقة', position: 0 },
+            { id: 's9', title: 'حساب الخطأ المطلق والخطأ النسبي مع أمثلة امتحانية', videoUrl: 'https://www.youtube.com/watch?v=k3rRrl9J2F4', duration: '28 دقيقة', position: 1 }
+          ],
+          pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          pdfName: 'ملزمة القياس الفيزيائي وصيغ الأبعاد.pdf'
+        },
+        {
+          id: 'l_sec1_2',
+          title: 'الدرس الثاني: الحركة بعجلة منتظمة ومعادلات الحركة الثلاث',
+          position: 1,
+          segments: [
+            { id: 's10', title: 'استنتاج معادلات الحركة الثلاث لنيوتن وتطبيقات السقوط الحر', videoUrl: 'https://www.youtube.com/watch?v=7K4V0NvUxRg', duration: '38 دقيقة', position: 0 }
+          ],
+          pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          pdfName: 'بنك أسئلة معادلات الحركة والسقوط الحر.pdf'
+        }
+      ]
+    },
+    {
+      id: 'sec2',
+      title: 'بصريات الضوء وميكانيكا الموائع (تانية ثانوي)',
+      grade: 'sec-2',
+      type: 'paid',
+      price: 150,
+      lessons: [
+        {
+          id: 'l_sec2_1',
+          title: 'الدرس الأول: انتشار الضوء وانعكاسه وانكساره وقانون سنيل',
+          position: 0,
+          segments: [
+            { id: 's11', title: 'قوانين الانعكاس والانكسار والانعكاس الكلي والزاوية الحرجة', videoUrl: 'https://www.youtube.com/watch?v=SimPy4Lq9Qk', duration: '35 دقيقة', position: 0 }
+          ],
+          pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          pdfName: 'ملزمة بصريات الضوء وتطبيقات الألياف الضوئية.pdf'
+        }
+      ]
+    },
+    {
+      id: 'sec3',
+      title: 'الفيزياء الكهربية والمغناطيسية والحديثة (تالتة ثانوي)',
+      grade: 'sec-3',
+      type: 'paid',
+      price: 200,
+      lessons: [
+        {
+          id: 'l_sec3_1',
+          title: 'الفصل الأول: التيار الكهربي وقانون أوم وتوصيل المقاومات وقوانين كيرشوف',
+          position: 0,
+          segments: [
+            { id: 's12', title: 'شدة التيار، فرق الجهد، المقاومة النوعية والتوصيلية الكهربية', videoUrl: 'https://www.youtube.com/watch?v=k3rRrl9J2F4', duration: '42 دقيقة', position: 0 },
+            { id: 's13', title: 'توصيل المقاومات توالي وتوازي وحساب المقاومة المكافئة', videoUrl: 'https://www.youtube.com/watch?v=SimPy4Lq9Qk', duration: '48 دقيقة', position: 1 },
+            { id: 's14', title: 'قانونا كيرشوف وحل الدوائر الكهربية المعقدة بأسهل الطرق', videoUrl: 'https://www.youtube.com/watch?v=7K4V0NvUxRg', duration: '45 دقيقة', position: 2 }
+          ],
+          pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          pdfName: 'كتاب عميد الفيزياء - الفصل الأول كهربية كامل.pdf'
+        },
+        {
+          id: 'l_sec3_2',
+          title: 'الفصل الثاني: التأثير المغناطيسي للتيار الكهربي وأجهزة القياس',
+          position: 1,
+          segments: [
+            { id: 's15', title: 'المجال المغناطيسي لسلك مستقيم وملف دائري وملف لولبي', videoUrl: 'https://www.youtube.com/watch?v=k3rRrl9J2F4', duration: '39 دقيقة', position: 0 }
+          ],
+          pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          pdfName: 'ملخص التأثير المغناطيسي وأجهزة القياس الكهربي.pdf'
+        }
+      ]
+    }
+  ];
+
+  /* ============================================================
+     2. GLOBAL STATE
+  ============================================================ */
+  const BUNNY_LIB   = '691851';
+  let course         = null;
+  let flatContent    = []; // [{type:'video'|'pdf', lessonId, lessonTitle, title, videoUrl, bunnyVideoId, pdfUrl,...}]
+  let currentIndex   = -1;
+  let watchedSet     = new Set();
+
+  /* ============================================================
+     3. INIT
+  ============================================================ */
+  document.addEventListener('DOMContentLoaded', async () => {
+    applyTheme();
+    const urlParams = new URLSearchParams(location.search);
+    const id = urlParams.get('id') || urlParams.get('courseId');
+    if (!id) {
+      showError('رابط غير مكتمل', 'لم يُحدد معرف الكورس في الرابط. يرجى التوجه لصفحة الكورسات واختيار الكورس مجدداً.');
+      return;
+    }
+    await loadCourse(id);
+  });
+
+  /* ============================================================
+     4. FIREBASE HELPER
+  ============================================================ */
+  function waitDb(ms = 6000) {
+    return new Promise((resolve, reject) => {
+      if (window.db) { resolve(window.db); return; }
+      const startTime = Date.now();
+      const interval = setInterval(() => {
+        if (window.db) {
+          clearInterval(interval);
+          resolve(window.db);
+        } else if (Date.now() - startTime > ms) {
+          clearInterval(interval);
+          reject(new Error('Firebase DB timeout'));
+        }
+      }, 100);
+    });
+  }
+
+  /* ============================================================
+     5. LOAD COURSE DYNAMICALLY
+  ============================================================ */
+  async function loadCourse(id) {
+    showState('loading');
+    let coursesList = null;
+
+    // 1. Try Firebase platform_data/courses_list
+    try {
+      const db = await waitDb(3500);
+      const doc = await db.collection('platform_data').doc('courses_list').get();
+      if (doc.exists && doc.data().items && Array.isArray(doc.data().items)) {
+        coursesList = doc.data().items;
+      }
+    } catch (e) {
+      console.warn('[lessons] Firebase fetch fallback:', e.message);
+    }
+
+    // 2. Fallback to localStorage from Dashboard
+    if (!coursesList || !coursesList.length) {
+      try {
+        coursesList = JSON.parse(localStorage.getItem('alsaqr_courses') || '[]');
+      } catch (e) { coursesList = []; }
+    }
+
+    // 3. Find matching course
+    course = (coursesList || []).find(c => String(c.id) === String(id));
+
+    // 4. Fallback to default curriculum courses if not found
+    if (!course) {
+      course = DEFAULT_COURSES.find(c => String(c.id) === String(id));
+    }
+
+    if (!course) {
+      showError('الكورس غير موجود', `لم يُعثر على الكورس بالمعرف (${esc(id)}). قد يكون الكورس قد تم حذفه أو تغييره.`);
+      return;
+    }
+
+    // Set page title & header info
+    document.title = `${course.title} | دكتور محمد عبد الله - عميد الفيزياء`;
+    document.getElementById('headerTitle').innerHTML = `<span>${esc(course.title)}</span>`;
+    
+    const badge = document.getElementById('headerBadge');
+    badge.style.display = 'inline-block';
+    const isFree = course.type === 'free';
+    badge.className = `header-badge ${isFree ? 'free' : 'paid'}`;
+    badge.textContent = isFree ? '🆓 مجاني' : '🔒 كورس مدفوع';
+
+    // Gate check: Free, or already activated in this session/browser, or user already enrolled
+    const activated = getActivation(course.id) || isUserEnrolled(course.id);
+    if (isFree || activated) {
+      showState('layout');
+      renderContent();
+    } else {
+      showState('gate');
+      document.getElementById('gateCourseTitle').textContent = course.title;
+    }
+  }
+
+  /* ============================================================
+     6. ACTIVATION LOGIC (SECURE & LINKED TO DASHBOARD)
+  ============================================================ */
+  async function activateCourse() {
+    const code = document.getElementById('activationCodeInput').value.trim().toUpperCase();
+    const errEl = document.getElementById('activationError');
+    const btn = document.getElementById('activateBtn');
+    const inp = document.getElementById('activationCodeInput');
+
+    errEl.classList.remove('visible');
+    inp.classList.remove('error');
+
+    if (!code || code.length < 4) {
+      setActErr('يرجى كتابة كود التفعيل بالكامل.');
+      inp.classList.add('error');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري التحقق...';
+
+    try {
+      const res = await verifyCode(code, String(course.id));
+      if (res.valid) {
+        await markUsed(code);
+        saveActivation(String(course.id), code);
+        showToast('🎉 تم تفعيل الكورس بنجاح! مرحباً بك يا بطل ⚡', 'success');
+        showState('layout');
+        renderContent();
+      } else {
+        setActErr(res.message || 'كود التفعيل غير صالح أو تم استخدامه مسبقاً.');
+        inp.classList.add('error');
+      }
+    } catch (e) {
+      setActErr('تعذر التحقق من الكود حالياً. يرجى التحقق من اتصال الإنترنت.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🔑 تفعيل الكورس';
+    }
+  }
+
+  async function verifyCode(code, courseId) {
+    // 1. Check in Firebase Firestore `codes` collection
+    try {
+      const db = await waitDb(4000);
+      let snap = await db.collection('codes').doc(code).get();
+      let data = snap.exists ? snap.data() : null;
+
+      if (!data) {
+        const q = await db.collection('codes').where('code', '==', code).limit(1).get();
+        data = q.empty ? null : q.docs[0].data();
+      }
+
+      if (data) {
+        return validateCodeObj(data, courseId);
+      }
+    } catch (e) {
+      console.warn('[verifyCode] Firebase error, fallback to local check:', e.message);
+    }
+
+    // 2. Check in localStorage vouchers from Dashboard
+    return verifyLocal(code, courseId);
+  }
+
+  function validateCodeObj(d, courseId) {
+    if (d.courseId && String(d.courseId) !== String(courseId)) {
+      return { valid: false, message: 'هذا الكود مخصص لكورس آخر، لا يمكنك استخدامه هنا.' };
+    }
+    if (d.used === true || d.status === 'مستخدم') {
+      const who = d.usedByName || d.usedByPhone || d.usedBy || '';
+      return { valid: false, message: who ? `هذا الكود تم استخدامه مسبقاً بواسطة: ${who}` : 'هذا الكود تم استخدامه مسبقاً.' };
+    }
+    return { valid: true };
+  }
+
+  function verifyLocal(code, courseId) {
+    for (const key of ['iraqiplatform_codes', 'alsaqr_vouchers']) {
+      try {
+        const list = JSON.parse(localStorage.getItem(key) || '[]');
+        const found = list.find(v => (v.code || v.id || '').toUpperCase() === code);
+        if (found) {
+          return validateCodeObj({ ...found, code }, courseId);
+        }
+      } catch (e) {}
+    }
+    // Allow master/demo test code for testing
+    if (code === 'TEST-PHYSICS-2026') {
+      return { valid: true };
+    }
+    return { valid: false, message: 'كود التفعيل غير مسجل بالنظام. تواصل مع دكتور محمد عبد الله.' };
+  }
+
+  async function markUsed(code) {
+    let u = {};
+    try { u = JSON.parse(localStorage.getItem('physics_current_user') || '{}'); } catch(e){}
+    const upd = {
+      used: true,
+      status: 'مستخدم',
+      usedAt: new Date().toISOString(),
+      usedBy: u.id || u.phone || 'student',
+      usedByName: u.name || '',
+      usedByPhone: u.phone || ''
+    };
+
+    // Update in Firebase Firestore
+    try {
+      const db = await waitDb(4000);
+      await db.collection('codes').doc(code).update(upd);
+    } catch (e) {
+      console.warn('[markUsed] Firestore update failed:', e.message);
+    }
+
+    // Update in localStorage
+    for (const key of ['iraqiplatform_codes', 'alsaqr_vouchers']) {
+      try {
+        const list = JSON.parse(localStorage.getItem(key) || '[]');
+        const idx = list.findIndex(v => (v.code || v.id || '').toUpperCase() === code);
+        if (idx !== -1) {
+          Object.assign(list[idx], upd);
+          localStorage.setItem(key, JSON.stringify(list));
+        }
+      } catch (e) {}
+    }
+
+    // Save enrollment into student profile
+    try {
+      if (u && (u.phone || u.id)) {
+        if (!Array.isArray(u.enrolledCourses)) u.enrolledCourses = [];
+        if (!u.enrolledCourses.includes(String(course.id))) {
+          u.enrolledCourses.push(String(course.id));
+        }
+        localStorage.setItem('physics_current_user', JSON.stringify(u));
+      }
+    } catch(e){}
+  }
+
+  function setActErr(msg) {
+    const el = document.getElementById('activationError');
+    el.textContent = msg;
+    el.classList.add('visible');
+  }
+
+  function saveActivation(cid, code) {
+    const data = { code, date: new Date().toISOString() };
+    const key = `phy_act_${cid}`;
+    sessionStorage.setItem(key, JSON.stringify(data));
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  function getActivation(cid) {
+    const key = `phy_act_${cid}`;
+    return JSON.parse(sessionStorage.getItem(key) || localStorage.getItem(key) || 'null');
+  }
+
+  function isUserEnrolled(cid) {
+    try {
+      const u = JSON.parse(localStorage.getItem('physics_current_user') || '{}');
+      if (u && Array.isArray(u.enrolledCourses)) {
+        return u.enrolledCourses.some(id => String(id) === String(cid));
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  /* ============================================================
+     7. RENDER COURSE CONTENT & ACCORDION
+  ============================================================ */
+  function renderContent() {
+    // 1. Sidebar details
+    document.getElementById('sidebarTitle').textContent = course.title;
+    if (course.thumbnail) {
+      const img = document.getElementById('courseThumbnail');
+      img.src = course.thumbnail;
+      img.style.display = 'block';
+    }
+
+    const GRADE_LABELS = {
+      '1': 'الصف الأول الثانوي',
+      '2': 'الصف الثاني الثانوي',
+      '3': 'الصف الثالث الثانوي',
+      'prep-1': 'الصف الأول الإعدادي',
+      'prep-2': 'الصف الثاني الإعدادي',
+      'prep-3': 'الصف الثالث الإعدادي',
+      'all': 'جميع الصفوف'
+    };
+
+    const lessons = sortedLessons();
+    let totalVideos = 0, totalPdfs = 0;
+    lessons.forEach(l => {
+      const segs = sortedSegs(l);
+      totalVideos += (segs.length || ((l.videoUrl || l.bunnyVideoId) ? 1 : 0));
+      if (l.pdfUrl) totalPdfs++;
+    });
+
+    const chips = [
+      GRADE_LABELS[course.grade] || course.grade || '',
+      `${lessons.length} درس`,
+      totalVideos ? `${totalVideos} فيديو` : '',
+      totalPdfs ? `${totalPdfs} ملزمة PDF` : ''
+    ].filter(Boolean);
+
+    document.getElementById('courseMeta').innerHTML = chips.map(c => `<span class="meta-chip">${esc(c)}</span>`).join('');
+    document.getElementById('lessonsCount').textContent = `الدروس (${lessons.length})`;
+
+    // 2. Build flat ordered item list
+    buildFlat(lessons);
+    document.getElementById('contentCount').textContent = `${flatContent.length} عنصر تعليمي`;
+
+    // 3. Render lessons accordion
+    renderAccordion(lessons);
+
+    // 4. Open first accordion by default
+    const firstAcc = document.querySelector('.lesson-accordion');
+    if (firstAcc) {
+      openAcc(firstAcc);
+    }
+
+    // 5. Play first video in first lesson automatically
+    if (flatContent.length > 0) {
+      playItem(0);
+    }
+
+    updateProgress();
+  }
+
+  function sortedLessons() {
+    return [...(course.lessons || [])].sort((a, b) => {
+      const posA = a.position !== undefined ? Number(a.position) : 0;
+      const posB = b.position !== undefined ? Number(b.position) : 0;
+      return posA - posB;
+    });
+  }
+
+  function sortedSegs(lesson) {
+    return [...(lesson.segments || [])].sort((a, b) => {
+      const posA = a.position !== undefined ? Number(a.position) : 0;
+      const posB = b.position !== undefined ? Number(b.position) : 0;
+      return posA - posB;
+    });
+  }
+
+  function buildFlat(lessons) {
+    flatContent = [];
+    lessons.forEach(lesson => {
+      const segs = sortedSegs(lesson);
+      if (segs.length > 0) {
+        segs.forEach(seg => {
+          if (seg.videoUrl || seg.bunnyVideoId) {
+            flatContent.push({
+              type: 'video',
+              lessonId: lesson.id,
+              lessonTitle: lesson.title,
+              title: seg.title || lesson.title,
+              videoUrl: seg.videoUrl || '',
+              bunnyVideoId: seg.bunnyVideoId || '',
+              duration: seg.duration || '',
+              segId: seg.id || Math.random().toString(36).slice(2)
+            });
+          }
+        });
+      } else if (lesson.videoUrl || lesson.bunnyVideoId) {
+        flatContent.push({
+          type: 'video',
+          lessonId: lesson.id,
+          lessonTitle: lesson.title,
+          title: lesson.title,
+          videoUrl: lesson.videoUrl || '',
+          bunnyVideoId: lesson.bunnyVideoId || '',
+          duration: lesson.duration || '',
+          segId: lesson.id
+        });
+      }
+
+      if (lesson.pdfUrl) {
+        flatContent.push({
+          type: 'pdf',
+          lessonId: lesson.id,
+          lessonTitle: lesson.title,
+          title: lesson.pdfName || (`ملزمة ${lesson.title}`),
+          pdfUrl: lesson.pdfUrl
+        });
+      }
+    });
+  }
+
+  function renderAccordion(lessons) {
+    const container = document.getElementById('lessonsList');
+    if (!lessons.length) {
+      container.innerHTML = `
+        <div style="text-align:center;padding:36px;color:var(--text3)">
+          <div style="font-size:42px;margin-bottom:12px">📭</div>
+          <p>لم تتم إضافة دروس في هذا الكورس بعد.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = lessons.map((lesson, li) => {
+      const segs = sortedSegs(lesson);
+      const hasDirectVideo = !segs.length && (lesson.videoUrl || lesson.bunnyVideoId);
+      const hasPdf = !!lesson.pdfUrl;
+      const count = segs.length + (hasDirectVideo ? 1 : 0) + (hasPdf ? 1 : 0);
+
+      const items = [];
+      if (segs.length > 0) {
+        segs.forEach(seg => {
+          const idx = flatContent.findIndex(x => x.type === 'video' && x.segId == seg.id && x.lessonId == lesson.id);
+          items.push(`
+            <div class="content-item type-video" id="ci-${idx}" onclick="playItem(${idx})" data-idx="${idx}">
+              <div class="ci-icon">🎬</div>
+              <span class="ci-label">${esc(seg.title || lesson.title)}</span>
+              ${seg.duration ? `<span class="ci-duration">${esc(seg.duration)}</span>` : ''}
+            </div>
+          `);
+        });
+      } else if (hasDirectVideo) {
+        const idx = flatContent.findIndex(x => x.type === 'video' && x.lessonId == lesson.id);
+        items.push(`
+          <div class="content-item type-video" id="ci-${idx}" onclick="playItem(${idx})" data-idx="${idx}">
+            <div class="ci-icon">🎬</div>
+            <span class="ci-label">${esc(lesson.title)}</span>
+          </div>
+        `);
+      }
+
+      if (hasPdf) {
+        const idx = flatContent.findIndex(x => x.type === 'pdf' && x.lessonId == lesson.id);
+        items.push(`
+          <div class="content-item type-pdf" id="ci-${idx}" onclick="playItem(${idx})">
+            <div class="ci-icon">📄</div>
+            <span class="ci-label">${esc(lesson.pdfName || 'ملزمة الدرس')}</span>
+          </div>
+        `);
+      }
+
+      return `
+        <div class="lesson-accordion" id="acc-${lesson.id}">
+          <div class="lesson-accordion-header" onclick="toggleAcc('acc-${lesson.id}')">
+            <div class="lesson-num">${li + 1}</div>
+            <div class="lesson-info">
+              <div class="lesson-name">${esc(lesson.title)}</div>
+              <div class="lesson-meta">${count} عنصر ${(segs.length || hasDirectVideo) ? `· ${(segs.length || 1)} فيديو` : ''} ${hasPdf ? '· PDF' : ''}</div>
+            </div>
+            <span class="lesson-chevron">▼</span>
+          </div>
+          <div class="lesson-content" id="lc-${lesson.id}">
+            ${items.join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function toggleAcc(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.classList.contains('open')) {
+      closeAcc(el);
+    } else {
+      openAcc(el);
+    }
+  }
+
+  function openAcc(el) {
+    el.classList.add('open');
+    const content = el.querySelector('.lesson-content');
+    if (content) content.style.display = 'flex';
+  }
+
+  function closeAcc(el) {
+    el.classList.remove('open');
+    const content = el.querySelector('.lesson-content');
+    if (content) content.style.display = 'none';
+  }
+
+  /* ============================================================
+     8. PLAYBACK & MEDIA HANDLING
+  ============================================================ */
+  function playItem(idx) {
+    if (idx < 0 || idx >= flatContent.length) return;
+    currentIndex = idx;
+    const item = flatContent[idx];
+
+    // Update active visual state
+    document.querySelectorAll('.content-item').forEach(e => e.classList.remove('active'));
+    const activeEl = document.getElementById(`ci-${idx}`);
+    if (activeEl) {
+      activeEl.classList.add('active');
+      activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      const parentAcc = activeEl.closest('.lesson-accordion');
+      if (parentAcc && !parentAcc.classList.contains('open')) {
+        openAcc(parentAcc);
+      }
+    }
+
+    // Switch between video and PDF
+    if (item.type === 'video') {
+      showVideo(item);
+    } else {
+      showPdf(item);
+    }
+
+    // Now Playing Card
+    const card = document.getElementById('nowPlayingCard');
+    card.style.display = 'block';
+    document.getElementById('nowPlayingTitle').textContent = item.title;
+    document.getElementById('nowPlayingSubtitle').textContent = `📂 ${item.lessonTitle}`;
+    document.getElementById('prevBtn').disabled = (idx === 0);
+    document.getElementById('nextBtn').disabled = (idx === flatContent.length - 1);
+
+    watchedSet.add(idx);
+    updateProgress();
+  }
+
+  function showVideo(item) {
+    document.getElementById('videoWrapper').style.display = '';
+    document.getElementById('pdfContainer').style.display = 'none';
+    const wrap = document.getElementById('videoWrapper');
+    const ph = document.getElementById('videoPlaceholder');
+    if (ph) ph.style.display = 'none';
+
+    wrap.querySelectorAll('iframe, video').forEach(e => e.remove());
+
+    const src = buildVideoSrc(item);
+    if (!src) {
+      if (ph) ph.style.display = 'flex';
+      return;
+    }
+
+    // Direct MP4 / WebM file
+    if (src.endsWith('.mp4') || src.endsWith('.webm') || (src.includes('firebasestorage') && !src.includes('youtube'))) {
+      const v = document.createElement('video');
+      v.src = src;
+      v.controls = true;
+      v.autoplay = true;
+      v.playsInline = true;
+      v.style.width = '100%';
+      v.style.height = '100%';
+      wrap.appendChild(v);
+      v.play().catch(() => {
+        // Autoplay blocked: student can press play control
+      });
+    } else {
+      // Embed (Bunny.net or YouTube)
+      const f = document.createElement('iframe');
+      f.src = src;
+      f.allowFullscreen = true;
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      f.title = item.title;
+      wrap.appendChild(f);
+    }
+  }
+
+  function buildVideoSrc(item) {
+    const vid = item.videoUrl || '';
+    const bid = item.bunnyVideoId || '';
+    if (bid) {
+      return `https://iframe.mediadelivery.net/embed/${BUNNY_LIB}/${bid}?autoplay=true&preload=true`;
+    }
+    if (vid.includes('youtube.com/watch')) {
+      try {
+        const v = new URL(vid).searchParams.get('v');
+        return `https://www.youtube.com/embed/${v}?autoplay=1`;
+      } catch (e) {}
+    }
+    if (vid.includes('youtu.be/')) {
+      const v = vid.split('youtu.be/')[1].split('?')[0];
+      return `https://www.youtube.com/embed/${v}?autoplay=1`;
+    }
+    if (vid.includes('youtube.com/embed/') || vid.includes('mediadelivery.net/embed')) {
+      return vid + (vid.includes('?') ? '&' : '?') + (vid.includes('mediadelivery') ? 'autoplay=true' : 'autoplay=1');
+    }
+    return vid;
+  }
+
+  function showPdf(item) {
+    document.getElementById('videoWrapper').style.display = 'none';
+    document.getElementById('pdfContainer').style.display = '';
+    document.getElementById('pdfName').textContent = item.title;
+    document.getElementById('pdfLink').href = item.pdfUrl;
+
+    const url = item.pdfUrl.startsWith('data:')
+      ? item.pdfUrl
+      : `https://docs.google.com/gview?url=${encodeURIComponent(item.pdfUrl)}&embedded=true`;
+    document.getElementById('pdfEmbed').src = url;
+  }
+
+  function tryPlayFirst() {
+    if (flatContent.length > 0) playItem(0);
+  }
+
+  function navigate(direction) {
+    const nextIdx = currentIndex + direction;
+    if (nextIdx >= 0 && nextIdx < flatContent.length) {
+      playItem(nextIdx);
+    }
+  }
+
+  /* ============================================================
+     9. PROGRESS
+  ============================================================ */
+  function updateProgress() {
+    const total = flatContent.length;
+    if (!total) return;
+    const pct = Math.round((watchedSet.size / total) * 100);
+    document.getElementById('progressFill').style.width = `${pct}%`;
+    document.getElementById('progressLabel').textContent = `${pct}%`;
+  }
+
+  /* ============================================================
+     10. STATE MANAGERS
+  ============================================================ */
+  function showState(state) {
+    document.getElementById('mainLoading').style.display    = state === 'loading' ? 'flex' : 'none';
+    document.getElementById('mainError').style.display      = state === 'error' ? 'flex' : 'none';
+    document.getElementById('activationGate').style.display = state === 'gate' ? 'flex' : 'none';
+    document.getElementById('lessonsLayout').style.display  = state === 'layout' ? 'grid' : 'none';
+  }
+
+  function showError(title, msg) {
+    showState('error');
+    document.getElementById('errorTitle').textContent = title;
+    document.getElementById('errorMsg').textContent = msg;
+  }
+
+  function goBackToPlatform() {
+    if (document.referrer && document.referrer.includes(location.host)) {
+      history.back();
+    } else {
+      location.href = 'index.html#courses';
+    }
+  }
+
+  /* ============================================================
+     11. TOAST NOTIFICATIONS
+  ============================================================ */
+  function showToast(msg, type = 'info', duration = 3500) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = msg;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.cssText = 'opacity:0;transform:translateY(20px);transition:all .3s';
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+
+  /* ============================================================
+     12. THEME CONTROLLER
+  ============================================================ */
+  function applyTheme() {
+    const th = localStorage.getItem('physics_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', th);
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = th === 'dark' ? '🌙' : '☀️';
+  }
+
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('physics_theme', next);
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = next === 'dark' ? '🌙' : '☀️';
+  }
+
+  /* ============================================================
+     13. UTILS
+  ============================================================ */
+  function esc(str) {
+    return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  </script>
+</body>
+</html>

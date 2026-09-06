@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إنشاء حساب طالب جديد | دكتور محمد عبد الله - عميد الفيزياء</title>
+  <meta name="description" content="سجل الآن في منصة دكتور محمد عبد الله - عميد الفيزياء للوصول لأقوى شرح ومراجعات الفيزياء لكافة المراحل الإعدادية والثانوية.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><circle cx='12' cy='12' r='3'/><path d='M20.2 20.2c2.4-2.4 2.4-6.3 0-8.7L13 4.3a1.5 1.5 0 0 0-2.1 0L3.8 11.5c-2.4 2.4-2.4 6.3 0 8.7 2.4 2.4 6.3 2.4 8.7 0l7.7-7.7'/></svg>">
+</head>
+<body class="auth-page">
+
+  <!-- خلفية الجسيمات التفاعلية -->
+  <canvas id="physicsCanvas" class="physics-bg-canvas"></canvas>
+
+  <!-- شريط ملاحة بسيط لصفحات المصادقة -->
+  <header class="main-header" style="background: transparent; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <nav class="navbar" style="height: 70px;">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon physics-magnet-logo" style="width: 44px; height: 44px;">
+            <svg viewBox="0 0 48 48" fill="none">
+              <path d="M14 12 C14 2, 34 2, 34 12" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3 3" opacity="0.8"></path>
+              <path d="M8 24 C8 35 15 42 24 42 C33 42 40 35 40 24 V15 H30 V24 C30 27.5 27.5 31 24 31 C20.5 31 18 27.5 18 24 V15 H8 V24 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+              <rect x="8" y="10" width="10" height="9" rx="1.5" fill="#ef4444"/>
+              <text x="13" y="17" fill="#ffffff" font-size="8" font-weight="900" text-anchor="middle" font-family="sans-serif">N</text>
+              <rect x="30" y="10" width="10" height="9" rx="1.5" fill="#0284c7"/>
+              <text x="35" y="17" fill="#ffffff" font-size="8" font-weight="900" text-anchor="middle" font-family="sans-serif">S</text>
+              <path d="M23 7 L25 12 L22 13 L26 19 L24 14 L27 13 Z" fill="#fbbf24"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title" style="font-size: 1.05rem;">دكتور محمد عبد الله</span>
+            <span class="brand-subtitle" style="font-size: 0.75rem;">عميد الفيزياء ⚡🧲</span>
+          </div>
+        </a>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <!-- زر التبديل بين الوضع الليلي والنهاري -->
+          <button type="button" class="theme-toggle-btn" aria-label="تبديل الثيم" title="تبديل الثيم">
+            <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          
+          <a href="index.html" class="btn btn-outline btn-sm">الرئيسية</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- محتوى نموذج إنشاء الحساب -->
+  <main class="auth-main">
+    <div class="auth-card">
+      
+      <div class="auth-header">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7.5" r="4"></circle>
+            <line x1="20" y1="8" x2="20" y2="14"></line>
+            <line x1="23" y1="11" x2="17" y2="11"></line>
+          </svg>
+        </div>
+        <h1>إنشاء حساب طالب جديد</h1>
+        <p>انضم الآن لمنصة عميد الفيزياء وابدأ طريق التفوق والدرجات النهائية</p>
+      </div>
+
+      <form id="registerForm" class="auth-form" novalidate>
+        
+        <!-- 1. الاسم ثلاثي -->
+        <div class="form-group">
+          <label for="regFullName" class="form-label">
+            <span>الاسم ثلاثي</span>
+            <span class="required-star">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="text" id="regFullName" class="form-input" placeholder="اكتب اسمك ثلاثياً بالكامل (مثال: أحمد محمد علي)" required autocomplete="name">
+            <span class="input-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+          </div>
+          <span class="field-hint">يجب أن يتكون الاسم من 3 كلمات على الأقل.</span>
+        </div>
+
+        <!-- 2 و 3. رقم هاتف الطالب ورقم هاتف ولي الأمر (صف مزدوج) -->
+        <div class="form-row">
+          
+          <!-- رقم هاتف الطالب (11 رقم) -->
+          <div class="form-group">
+            <label for="regPhone" class="form-label">
+              <span>رقم الهاتف الشخصي</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="tel" id="regPhone" class="form-input phone-input" placeholder="01xxxxxxxxx" maxlength="11" required autocomplete="tel">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+              </span>
+            </div>
+            <span class="field-hint">11 رقماً (أرقام فقط لا تزيد عن 11).</span>
+          </div>
+
+          <!-- رقم هاتف ولي الأمر (11 رقم) -->
+          <div class="form-group">
+            <label for="regParentPhone" class="form-label">
+              <span>رقم هاتف ولي الأمر</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="tel" id="regParentPhone" class="form-input phone-input" placeholder="01xxxxxxxxx" maxlength="11" required>
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+            </div>
+            <span class="field-hint">لإرسال درجات الامتحانات والتقارير.</span>
+          </div>
+
+        </div>
+
+        <!-- 4 و 5. الصف الدراسي والمحافظة (صف مزدوج) -->
+        <div class="form-row">
+          
+          <!-- الصف الدراسي (من أولى إعدادي إلى تالتة ثانوي) -->
+          <div class="form-group">
+            <label for="regGrade" class="form-label">
+              <span>الصف الدراسي</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="input-wrapper">
+              <select id="regGrade" class="form-select" required>
+                <option value="" disabled selected>اختر الصف الدراسي...</option>
+                <optgroup label="المرحلة الإعدادية">
+                  <option value="الصف الأول الإعدادي">الصف الأول الإعدادي</option>
+                  <option value="الصف الثاني الإعدادي">الصف الثاني الإعدادي</option>
+                  <option value="الصف الثالث الإعدادي">الصف الثالث الإعدادي (الشهادة)</option>
+                </optgroup>
+                <optgroup label="المرحلة الثانوية">
+                  <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                  <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                  <option value="الصف الثالث الثانوي">الصف الثالث الثانوي (العامة والأزهر)</option>
+                </optgroup>
+              </select>
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                  <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <!-- المحافظة -->
+          <div class="form-group">
+            <label for="regGov" class="form-label">
+              <span>المحافظة</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="input-wrapper">
+              <select id="regGov" class="form-select" required>
+                <option value="" disabled selected>اختر المحافظة...</option>
+                <option value="القاهرة">القاهرة</option>
+                <option value="الجيزة">الجيزة</option>
+                <option value="الإسكندرية">الإسكندرية</option>
+                <option value="الدقهلية">الدقهلية</option>
+                <option value="الشرقية">الشرقية</option>
+                <option value="الغربية">الغربية</option>
+                <option value="المنوفية">المنوفية</option>
+                <option value="القليوبية">القليوبية</option>
+                <option value="البحيرة">البحيرة</option>
+                <option value="كفر الشيخ">كفر الشيخ</option>
+                <option value="دمياط">دمياط</option>
+                <option value="بورسعيد">بورسعيد</option>
+                <option value="الإسماعيلية">الإسماعيلية</option>
+                <option value="السويس">السويس</option>
+                <option value="الفيوم">الفيوم</option>
+                <option value="بني سويف">بني سويف</option>
+                <option value="المنيا">المنيا</option>
+                <option value="أسيوط">أسيوط</option>
+                <option value="سوهاج">سوهاج</option>
+                <option value="قنا">قنا</option>
+                <option value="الأقصر">الأقصر</option>
+                <option value="أسوان">أسوان</option>
+                <option value="البحر الأحمر">البحر الأحمر</option>
+                <option value="الوادي الجديد">الوادي الجديد</option>
+                <option value="مطروح">مطروح</option>
+                <option value="شمال سيناء">شمال سيناء</option>
+                <option value="جنوب سيناء">جنوب سيناء</option>
+              </select>
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 6 و 7. كلمة المرور وتأكيدها (6 أرقام) -->
+        <div class="form-row">
+          
+          <!-- كلمة المرور (أي 6 أرقام) -->
+          <div class="form-group">
+            <label for="regPassword" class="form-label">
+              <span>كلمة المرور (6 أرقام)</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="password" id="regPassword" class="form-input numeric-password" placeholder="6 أرقام (مثال: 123456)" maxlength="6" inputmode="numeric" required autocomplete="new-password">
+              <button type="button" class="password-toggle-btn" data-target="regPassword" aria-label="إظهار أو إخفاء كلمة المرور">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <span class="field-hint">أي 6 أرقام تختارها لتسجيل الدخول.</span>
+          </div>
+
+          <!-- تأكيد كلمة المرور -->
+          <div class="form-group">
+            <label for="regConfirmPassword" class="form-label">
+              <span>تأكيد كلمة المرور</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="password" id="regConfirmPassword" class="form-input numeric-password" placeholder="أعد كتابة الـ 6 أرقام" maxlength="6" inputmode="numeric" required autocomplete="new-password">
+              <button type="button" class="password-toggle-btn" data-target="regConfirmPassword" aria-label="إظهار أو إخفاء تأكيد كلمة المرور">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <span class="field-hint">تأكيد تطابق الـ 6 أرقام.</span>
+          </div>
+
+        </div>
+
+        <!-- زر إنشاء الحساب -->
+        <button type="submit" class="btn btn-primary" id="btnSubmitRegister" style="width: 100%; padding: 14px; font-size: 1.05rem; margin-top: 8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>إنشاء حساب والبدء فوراً</span>
+        </button>
+
+        <div class="form-footer-action">
+          لديك حساب بالفعل على المنصة؟ <a href="login.html">تسجيل الدخول الآن</a>
+        </div>
+
+      </form>
+
+    </div>
+  </main>
+
+  <!-- Firebase SDK (Compat v9) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-service.js"></script>
+  <script src="main.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
