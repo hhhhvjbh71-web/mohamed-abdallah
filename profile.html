@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الملف الشخصي للطالب | دكتور محمد عبد الله - عميد الفيزياء</title>
+  <meta name="description" content="الملف الشخصي للطالب - تعديل البيانات الأساسية وتغيير كلمة المرور ومتابعة الكورسات">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><circle cx='12' cy='12' r='3'/><path d='M20.2 20.2c2.4-2.4 2.4-6.3 0-8.7L13 4.3a1.5 1.5 0 0 0-2.1 0L3.8 11.5c-2.4 2.4-2.4 6.3 0 8.7 2.4 2.4 6.3 2.4 8.7 0l7.7-7.7'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mobile-fix.css">
+  <style>
+    .profile-page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-primary);
+    }
+
+    .profile-header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      backdrop-filter: blur(12px);
+    }
+
+    .profile-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .profile-main {
+      flex: 1;
+      padding: 36px 0 60px;
+    }
+
+    .profile-hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 180px;
+      height: 100%;
+      background: var(--gradient-physics);
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    .profile-user-summary {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .profile-avatar-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--gradient-physics);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 2rem;
+      font-weight: 900;
+      box-shadow: 0 0 24px rgba(14, 165, 233, 0.4);
+      flex-shrink: 0;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .profile-info h1 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .profile-badges {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge-pill {
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent-secondary);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .badge-pill.status-active {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 28px;
+    }
+
+    @media (max-width: 900px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .profile-section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: rgba(14, 165, 233, 0.12);
+      color: var(--accent-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .locked-notice {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    .input-disabled-wrap input, .input-disabled-wrap select {
+      background: rgba(255, 255, 255, 0.03) !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+      color: var(--text-muted) !important;
+      cursor: not-allowed;
+    }
+
+    .courses-enrolled-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .course-item-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      gap: 12px;
+    }
+
+    .course-item-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+
+    .alert-box {
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .alert-box.visible { display: block; }
+    .alert-success { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .alert-error { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    .btn-loading {
+      opacity: 0.7;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="profile-page-wrapper">
+
+    <!-- الهيدر الخاص بالملف الشخصي -->
+    <header class="profile-header">
+      <div class="container">
+        <a href="index.html" class="brand-logo" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+          <div class="brand-icon" style="width:38px; height:38px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M20.2 20.2c2.4-2.4 2.4-6.3 0-8.7L13 4.3a1.5 1.5 0 0 0-2.1 0L3.8 11.5c-2.4 2.4-2.4 6.3 0 8.7 2.4 2.4 6.3 2.4 8.7 0l7.7-7.7"></path>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title" style="font-size:1.05rem;">دكتور محمد عبد الله</span>
+            <span class="brand-subtitle" style="font-size:0.75rem;">عميد الفيزياء</span>
+          </div>
+        </a>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+          <a href="index.html" class="btn btn-outline btn-sm">الرئيسية</a>
+          <a href="index.html#courses" class="btn btn-outline btn-sm">الكورسات</a>
+          <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="تبديل الوضع الليلي والنهاري" title="تبديل الثيم">
+            <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+            </svg>
+            <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="logoutUser(event)" style="color:var(--accent-rose); border-color:rgba(244,63,94,0.3);">
+            خروج
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- المحتوى الرئيسي للملف الشخصي -->
+    <main class="profile-main">
+      <div class="container">
+
+        <!-- بطاقة تلخيص الطالب العلوية -->
+        <div class="profile-hero-card">
+          <div class="profile-user-summary">
+            <div class="profile-avatar-large" id="profileHeroAvatar">ط</div>
+            <div class="profile-info">
+              <h1 id="profileHeroName">جاري التحميل...</h1>
+              <div class="profile-badges">
+                <span class="badge-pill status-active">⚡ حساب طالب نشط</span>
+                <span class="badge-pill" id="profileHeroGrade">الصف الدراسي</span>
+                <span class="badge-pill" id="profileHeroGov">المحافظة</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <a href="index.html#courses" class="btn btn-primary btn-sm">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>متابعة الكورسات</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="profile-grid">
+
+          <!-- العمود الأول: تعديل البيانات الأساسية -->
+          <div class="profile-section-card">
+            <div class="section-header">
+              <div class="section-icon">👤</div>
+              <div>
+                <h2 class="section-title">البيانات الأساسية</h2>
+                <span style="font-size:0.82rem; color:var(--text-muted);">يمكنك تعديل البيانات المسموح بها وحفظها فوراً</span>
+              </div>
+            </div>
+
+            <div id="infoAlertBox" class="alert-box"></div>
+
+            <form id="profileInfoForm" novalidate>
+
+              <!-- اسم الطالب (مسموح بتعديله) -->
+              <div class="form-group">
+                <label for="profName" class="form-label">
+                  <span>اسم الطالب ثلاثي</span>
+                  <span class="required-star">*</span>
+                </label>
+                <div class="input-wrapper">
+                  <input type="text" id="profName" class="form-input" placeholder="اسم الطالب ثلاثياً" required>
+                  <span class="input-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+
+              <!-- هاتف ولي الأمر (مسموح بتعديله) -->
+              <div class="form-group">
+                <label for="profParentPhone" class="form-label">
+                  <span>رقم هاتف ولي الأمر</span>
+                  <span class="required-star">*</span>
+                </label>
+                <div class="input-wrapper">
+                  <input type="tel" id="profParentPhone" class="form-input phone-input" placeholder="01xxxxxxxxx" maxlength="11" required>
+                  <span class="input-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                    </svg>
+                  </span>
+                </div>
+                <span class="field-hint">مسموح بالتعديل لتحديث تواصل ولي الأمر.</span>
+              </div>
+
+              <!-- المحافظة (مسموح بتعديلها) -->
+              <div class="form-group">
+                <label for="profGov" class="form-label">
+                  <span>المحافظة</span>
+                  <span class="required-star">*</span>
+                </label>
+                <div class="input-wrapper">
+                  <select id="profGov" class="form-select" required>
+                    <option value="القاهرة">القاهرة</option>
+                    <option value="الجيزة">الجيزة</option>
+                    <option value="الإسكندرية">الإسكندرية</option>
+                    <option value="الدقهلية">الدقهلية</option>
+                    <option value="الشرقية">الشرقية</option>
+                    <option value="الغربية">الغربية</option>
+                    <option value="المنوفية">المنوفية</option>
+                    <option value="القليوبية">القليوبية</option>
+                    <option value="البحيرة">البحيرة</option>
+                    <option value="كفر الشيخ">كفر الشيخ</option>
+                    <option value="دمياط">دمياط</option>
+                    <option value="بورسعيد">بورسعيد</option>
+                    <option value="الإسماعيلية">الإسماعيلية</option>
+                    <option value="السويس">السويس</option>
+                    <option value="الفيوم">الفيوم</option>
+                    <option value="بني سويف">بني سويف</option>
+                    <option value="المنيا">المنيا</option>
+                    <option value="أسيوط">أسيوط</option>
+                    <option value="سوهاج">سوهاج</option>
+                    <option value="قنا">قنا</option>
+                    <option value="الأقصر">الأقصر</option>
+                    <option value="أسوان">أسوان</option>
+                    <option value="البحر الأحمر">البحر الأحمر</option>
+                    <option value="الوادي الجديد">الوادي الجديد</option>
+                    <option value="مطروح">مطروح</option>
+                    <option value="شمال سيناء">شمال سيناء</option>
+                    <option value="جنوب سيناء">جنوب سيناء</option>
+                  </select>
+                </div>
+              </div>
+
+              <hr style="border:0; border-top:1px solid var(--border-color); margin: 20px 0;">
+
+              <!-- البيانات الحساسة المحمية (غير مسموح بتعديلها) -->
+              <div style="margin-bottom: 16px;">
+                <span style="font-size:0.85rem; font-weight:700; color:var(--text-secondary); display:flex; align-items:center; gap:6px;">
+                  🔒 بيانات الحساب المحمية (غير قابلة للتعديل للحفاظ على الأمان):
+                </span>
+              </div>
+
+              <!-- هاتف الطالب (معرف أساسي غير قابل للتعديل) -->
+              <div class="form-group input-disabled-wrap">
+                <label class="form-label">
+                  <span>رقم هاتف الطالب (اسم المستخدم)</span>
+                </label>
+                <div class="input-wrapper">
+                  <input type="tel" id="profPhoneReadOnly" class="form-input" readonly disabled>
+                  <span class="input-icon">🔒</span>
+                </div>
+                <span class="locked-notice">
+                  <span>🔒 رقم الهاتف هو معرف الحساب الأساسي ولا يمكن تغييره لضمان أمان حسابك.</span>
+                </span>
+              </div>
+
+              <!-- الصف الدراسي (غير قابل للتعديل) -->
+              <div class="form-group input-disabled-wrap">
+                <label class="form-label">
+                  <span>الصف الدراسي</span>
+                </label>
+                <div class="input-wrapper">
+                  <input type="text" id="profGradeReadOnly" class="form-input" readonly disabled>
+                  <span class="input-icon">🔒</span>
+                </div>
+                <span class="locked-notice">
+                  <span>🔒 الصف الدراسي مرتبط باشتراكاتك ولا يمكن تعديله إلا بالتواصل مع الإدارة.</span>
+                </span>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="btnSaveInfo" style="width:100%; padding:12px; margin-top:8px;">
+                <span>حفظ التعديلات</span>
+              </button>
+
+            </form>
+          </div>
+
+          <!-- العمود الثاني: تغيير كلمة المرور بأمان + الكورسات -->
+          <div style="display:flex; flex-direction:column; gap:28px;">
+
+            <!-- تغيير كلمة المرور -->
+            <div class="profile-section-card">
+              <div class="section-header">
+                <div class="section-icon" style="background:rgba(244,63,94,0.12); color:var(--accent-rose);">🔑</div>
+                <div>
+                  <h2 class="section-title">تغيير كلمة المرور</h2>
+                  <span style="font-size:0.82rem; color:var(--text-muted);">كلمة المرور تتكون من 6 أرقام سرية</span>
+                </div>
+              </div>
+
+              <div id="passwordAlertBox" class="alert-box"></div>
+
+              <form id="changePasswordForm" novalidate>
+
+                <!-- كلمة المرور الحالية -->
+                <div class="form-group">
+                  <label for="oldPassword" class="form-label">
+                    <span>كلمة المرور الحالية (6 أرقام)</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="input-wrapper">
+                    <input type="password" id="oldPassword" class="form-input numeric-password" placeholder="أدخل الـ 6 أرقام الحالية" maxlength="6" inputmode="numeric" required>
+                    <button type="button" class="password-toggle-btn" data-target="oldPassword" aria-label="إظهار/إخفاء">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- كلمة المرور الجديدة -->
+                <div class="form-group">
+                  <label for="newPassword" class="form-label">
+                    <span>كلمة المرور الجديدة (6 أرقام)</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="input-wrapper">
+                    <input type="password" id="newPassword" class="form-input numeric-password" placeholder="أدخل 6 أرقام جديدة" maxlength="6" inputmode="numeric" required>
+                    <button type="button" class="password-toggle-btn" data-target="newPassword" aria-label="إظهار/إخفاء">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- تأكيد كلمة المرور الجديدة -->
+                <div class="form-group">
+                  <label for="confirmNewPassword" class="form-label">
+                    <span>تأكيد كلمة المرور الجديدة</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="input-wrapper">
+                    <input type="password" id="confirmNewPassword" class="form-input numeric-password" placeholder="أعد إدخال الـ 6 أرقام" maxlength="6" inputmode="numeric" required>
+                    <button type="button" class="password-toggle-btn" data-target="confirmNewPassword" aria-label="إظهار/إخفاء">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="btnChangePassword" style="width:100%; padding:12px; margin-top:8px;">
+                  <span>تحديث كلمة المرور في قاعدة البيانات</span>
+                </button>
+
+              </form>
+            </div>
+
+            <!-- الكورسات المشترك بها -->
+            <div class="profile-section-card">
+              <div class="section-header">
+                <div class="section-icon" style="background:rgba(16,185,129,0.12); color:#34d399;">📚</div>
+                <div>
+                  <h2 class="section-title">كورساتي المفعلة</h2>
+                  <span style="font-size:0.82rem; color:var(--text-muted);">الكورسات التي قمت بالاشتراك فيها أو تفعيلها</span>
+                </div>
+              </div>
+
+              <div id="enrolledCoursesContainer" class="courses-enrolled-list">
+                <p style="font-size:0.9rem; color:var(--text-muted); text-align:center; padding:16px;">
+                  جاري جلب الكورسات...
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Firebase SDK (Compat v9) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-service.js"></script>
+
+  <script>
+    // 1. Theme Logic
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const currentTheme = localStorage.getItem('physics_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('physics_theme', theme);
+      });
+    }
+
+    // 2. Toast System
+    function showToast(message, type = 'info', duration = 3000) {
+      let container = document.getElementById('toastContainer');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+      }
+      const toast = document.createElement('div');
+      toast.className = `toast-message toast-${type}`;
+      toast.innerHTML = `<span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, duration);
+    }
+
+    function logoutUser(e) {
+      if (e) e.preventDefault();
+      localStorage.removeItem('physics_current_user');
+      showToast('تم تسجيل الخروج بنجاح', 'info', 1500);
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 600);
+    }
+
+    // 3. User Data Loading & Guard
+    let currentUser = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const userJson = localStorage.getItem('physics_current_user');
+      if (!userJson) {
+        // إذا لم يكن مسجلاً، وجهه لصفحة الدخول مع حفظ رابط العودة
+        window.location.href = 'login.html?returnUrl=' + encodeURIComponent('profile.html');
+        return;
+      }
+
+      try {
+        currentUser = JSON.parse(userJson);
+      } catch(e) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      if (!currentUser || (!currentUser.phone && !currentUser.id)) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      populateProfileUI();
+      initPasswordToggles();
+      initPhoneInputsRestriction();
+      initInfoForm();
+      initPasswordForm();
+      renderEnrolledCourses();
+    });
+
+    function populateProfileUI() {
+      const firstName = (currentUser.name || 'طالب').split(' ')[0];
+      const initial = firstName.charAt(0);
+
+      document.getElementById('profileHeroAvatar').textContent = initial;
+      document.getElementById('profileHeroName').textContent = currentUser.name || 'طالب الفيزياء';
+      document.getElementById('profileHeroGrade').textContent = currentUser.grade || 'غير محدد';
+      document.getElementById('profileHeroGov').textContent = currentUser.governorate || 'مصر';
+
+      // بيانات الفورم
+      document.getElementById('profName').value = currentUser.name || '';
+      document.getElementById('profParentPhone').value = currentUser.parentPhone || '';
+      if (currentUser.governorate) {
+        document.getElementById('profGov').value = currentUser.governorate;
+      }
+
+      // الحقول المحمية غير القابلة للتعديل
+      document.getElementById('profPhoneReadOnly').value = currentUser.phone || '';
+      document.getElementById('profGradeReadOnly').value = currentUser.grade || '';
+    }
+
+    function initPasswordToggles() {
+      document.querySelectorAll('.password-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          const input = document.getElementById(targetId);
+          if (!input) return;
+          const isPassword = input.getAttribute('type') === 'password';
+          input.setAttribute('type', isPassword ? 'text' : 'password');
+        });
+      });
+    }
+
+    function initPhoneInputsRestriction() {
+      const parentPhoneInput = document.getElementById('profParentPhone');
+      if (parentPhoneInput) {
+        parentPhoneInput.addEventListener('input', function() {
+          this.value = this.value.replace(/\D/g, '').slice(0, 11);
+        });
+      }
+
+      document.querySelectorAll('.numeric-password').forEach(inp => {
+        inp.addEventListener('input', function() {
+          this.value = this.value.replace(/\D/g, '').slice(0, 6);
+        });
+      });
+    }
+
+    // 4. Save Basic Info
+    function initInfoForm() {
+      const form = document.getElementById('profileInfoForm');
+      const btn = document.getElementById('btnSaveInfo');
+      const alertBox = document.getElementById('infoAlertBox');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        alertBox.className = 'alert-box';
+        alertBox.textContent = '';
+
+        const newName = document.getElementById('profName').value.trim();
+        const newParentPhone = document.getElementById('profParentPhone').value.trim();
+        const newGov = document.getElementById('profGov').value;
+
+        if (!newName || newName.split(/\s+/).length < 3) {
+          showAlert(alertBox, 'يرجى كتابة الاسم ثلاثياً على الأقل', 'error');
+          return;
+        }
+
+        if (!newParentPhone || newParentPhone.length !== 11 || !/^01[0125][0-9]{8}$/.test(newParentPhone)) {
+          showAlert(alertBox, 'رقم هاتف ولي الأمر غير صحيح (يجب أن يبدأ بـ 01 ويتكون من 11 رقماً)', 'error');
+          return;
+        }
+
+        btn.disabled = true;
+        btn.classList.add('btn-loading');
+        btn.innerHTML = '<span>جاري حفظ التعديلات...</span>';
+
+        try {
+          // تحديث Firestore
+          if (window.db) {
+            let docId = currentUser.id;
+            if (!docId) {
+              // البحث برقم الهاتف
+              const snap = await window.db.collection('students').where('phone', '==', currentUser.phone).limit(1).get();
+              if (!snap.empty) {
+                docId = snap.docs[0].id;
+              }
+            }
+
+            if (docId) {
+              await window.db.collection('students').doc(docId).update({
+                name: newName,
+                parentPhone: newParentPhone,
+                governorate: newGov,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+            }
+          }
+
+          // تحديث الجلسة المحلية
+          currentUser.name = newName;
+          currentUser.parentPhone = newParentPhone;
+          currentUser.governorate = newGov;
+          localStorage.setItem('physics_current_user', JSON.stringify(currentUser));
+
+          populateProfileUI();
+          showAlert(alertBox, 'تم حفظ وتحديث بياناتك بنجاح! ✨', 'success');
+          showToast('تم تحديث البيانات بنجاح', 'success');
+        } catch(err) {
+          console.error(err);
+          showAlert(alertBox, 'حدث خطأ أثناء الحفظ: ' + err.message, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.classList.remove('btn-loading');
+          btn.innerHTML = '<span>حفظ التعديلات</span>';
+        }
+      });
+    }
+
+    // 5. Change Password Form
+    function initPasswordForm() {
+      const form = document.getElementById('changePasswordForm');
+      const btn = document.getElementById('btnChangePassword');
+      const alertBox = document.getElementById('passwordAlertBox');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        alertBox.className = 'alert-box';
+        alertBox.textContent = '';
+
+        const oldPass = document.getElementById('oldPassword').value.trim();
+        const newPass = document.getElementById('newPassword').value.trim();
+        const confPass = document.getElementById('confirmNewPassword').value.trim();
+
+        if (!oldPass || oldPass.length !== 6 || !/^\d{6}$/.test(oldPass)) {
+          showAlert(alertBox, 'يرجى إدخال كلمة المرور الحالية المكونة من 6 أرقام', 'error');
+          return;
+        }
+
+        if (!newPass || newPass.length !== 6 || !/^\d{6}$/.test(newPass)) {
+          showAlert(alertBox, 'كلمة المرور الجديدة يجب أن تكون 6 أرقام بالضبط', 'error');
+          return;
+        }
+
+        if (newPass !== confPass) {
+          showAlert(alertBox, 'كلمة المرور الجديدة وتأكيدها غير متطابقين', 'error');
+          return;
+        }
+
+        if (oldPass === newPass) {
+          showAlert(alertBox, 'كلمة المرور الجديدة مطابقة لكلمة المرور الحالية!', 'error');
+          return;
+        }
+
+        btn.disabled = true;
+        btn.classList.add('btn-loading');
+        btn.innerHTML = '<span>جاري التحقق والتحديث...</span>';
+
+        try {
+          if (!window.db) {
+            throw new Error('قاعدة البيانات غير متصلة، تحقق من الإنترنت');
+          }
+
+          // جلب بيانات الطالب من Firestore للتحقق من كلمة المرور الحالية بأمان
+          let docRef = null;
+          let studentData = null;
+
+          if (currentUser.id) {
+            const doc = await window.db.collection('students').doc(currentUser.id).get();
+            if (doc.exists) {
+              docRef = doc.ref;
+              studentData = doc.data();
+            }
+          }
+
+          if (!docRef) {
+            const snap = await window.db.collection('students').where('phone', '==', currentUser.phone).limit(1).get();
+            if (!snap.empty) {
+              docRef = snap.docs[0].ref;
+              studentData = snap.docs[0].data();
+            }
+          }
+
+          if (!docRef || !studentData) {
+            throw new Error('لم يتم العثور على سجل الطالب في قاعدة البيانات');
+          }
+
+          // التحقق من كلمة المرور الحالية
+          if (String(studentData.password) !== String(oldPass)) {
+            showAlert(alertBox, 'كلمة المرور الحالية غير صحيحة، يرجى التأكد وإعادة المحاولة', 'error');
+            return;
+          }
+
+          // تحديث كلمة المرور في قاعدة البيانات
+          await docRef.update({
+            password: String(newPass),
+            passwordUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+
+          // تصفير الحقول
+          document.getElementById('oldPassword').value = '';
+          document.getElementById('newPassword').value = '';
+          document.getElementById('confirmNewPassword').value = '';
+
+          showAlert(alertBox, '🔒 تم تغيير كلمة المرور بنجاح في قاعدة البيانات!', 'success');
+          showToast('تم تغيير كلمة المرور بنجاح', 'success');
+        } catch(err) {
+          console.error(err);
+          showAlert(alertBox, 'فشل تحديث كلمة المرور: ' + err.message, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.classList.remove('btn-loading');
+          btn.innerHTML = '<span>تحديث كلمة المرور في قاعدة البيانات</span>';
+        }
+      });
+    }
+
+    function showAlert(box, message, type) {
+      box.textContent = message;
+      box.className = `alert-box visible alert-${type}`;
+    }
+
+    // 6. Enrolled Courses List
+    function renderEnrolledCourses() {
+      const container = document.getElementById('enrolledCoursesContainer');
+      const enrolled = currentUser.enrolledCourses || [];
+
+      // نتحقق أيضاً من التفعيلات المحفوظة محلياً
+      const activeIds = new Set(enrolled.map(String));
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('phy_act_')) {
+          activeIds.add(key.replace('phy_act_', ''));
+        }
+      }
+
+      const courseNames = {
+        'prep1': 'أساسيات المادة والطاقة والحركة (أولى إعدادي)',
+        'prep2': 'الحركة الدورية والموجات والضوء (تانية إعدادي)',
+        'prep3': 'السرعة المتجهة والفيزياء الكونية (تالتة إعدادي)',
+        'sec1': 'الميكانيكا وقوانين الحركة (أولى ثانوي)',
+        'sec2': 'الكهربية والتيار المستمر ومقدمة المغناطيسية (تانية ثانوي)',
+        'sec3': 'الفيزياء الحديثة والكهرومغناطيسية (تالتة ثانوي)'
+      };
+
+      if (activeIds.size === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding: 20px; color: var(--text-secondary);">
+            <p style="margin-bottom:12px;">لم تقم بتفعيل أي كورس بعد.</p>
+            <a href="index.html#courses" class="btn btn-outline btn-sm">استكشف الكورسات المتاحة</a>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      activeIds.forEach(id => {
+        const title = courseNames[id] || `كورس فيزياء (${id})`;
+        html += `
+          <div class="course-item-card">
+            <div>
+              <div class="course-item-title">⚡ ${title}</div>
+              <span style="font-size:0.75rem; color:#34d399;">كورس مفعّل ومتاح للمشاهدة</span>
+            </div>
+            <a href="lessons.html?id=${encodeURIComponent(id)}" class="btn btn-primary btn-sm" style="white-space:nowrap;">
+              دخول الكورس ↗
+            </a>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+  </script>
+</body>
+</html>

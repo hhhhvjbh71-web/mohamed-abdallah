@@ -598,22 +598,106 @@
     /* ACTIVATION GATE */
     .gate-wrap {
       display: none;
-      padding: 40px 24px;
+      padding: 36px 20px;
       min-height: calc(100vh - 64px);
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
+    }
+    .gate-container {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 680px;
+      width: 100%;
+      margin: 0 auto;
+      animation: zoomIn 0.35s ease;
     }
     .activation-gate {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 48px 36px;
+      padding: 38px 30px;
       text-align: center;
-      max-width: 520px;
       width: 100%;
-      margin: 0 auto;
       box-shadow: var(--shadow);
-      animation: zoomIn 0.35s ease;
+    }
+    .gate-curriculum-preview {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      text-align: right;
+    }
+    .gate-preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .preview-locked-badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .preview-hint {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .gate-lessons-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .gate-lesson-item {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+    .gate-lesson-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .gate-segments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 14px;
+      border-right: 2px solid var(--border);
+      margin-top: 10px;
+    }
+    .gate-segment-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text2);
+      gap: 8px;
+    }
+    .gate-segment-duration {
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 8px;
+      border-radius: 10px;
+      color: var(--text3);
+      white-space: nowrap;
     }
     .gate-icon {
       width: 88px;
@@ -832,7 +916,12 @@
         <span>جاري التحميل...</span>
       </div>
       <span class="header-badge" id="headerBadge" style="display:none"></span>
-      <button class="theme-btn" onclick="toggleTheme()" title="تغيير المظهر (ليلي / نهاري)" id="themeBtn">🌙</button>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <a href="profile.html" id="headerProfileAvatar" title="الملف الشخصي" style="display:none; text-decoration:none;">
+          <div id="headerProfileInitial" style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--primary-dark)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; border:2px solid rgba(255,255,255,0.2); cursor:pointer;">ط</div>
+        </a>
+        <button class="theme-btn" onclick="toggleTheme()" title="تغيير المظهر (ليلي / نهاري)" id="themeBtn">🌙</button>
+      </div>
     </div>
   </header>
 
@@ -852,20 +941,37 @@
 
   <!-- ACTIVATION GATE (FOR PAID COURSES) -->
   <div class="gate-wrap" id="activationGate">
-    <div class="activation-gate">
-      <div class="gate-icon">🔒</div>
-      <h1 class="gate-title">تفعيل الكورس مطلوب</h1>
-      <p class="gate-subtitle">هذا الكورس مدفوع. يرجى إدخال كود التفعيل الممنوح لك من قِبل المدرس للوصول المباشر لكافة الدروس والفيديوهات والملازم.</p>
-      <div class="gate-course-name" id="gateCourseTitle">—</div>
-      <div class="code-input-wrap">
-        <input type="text" id="activationCodeInput" class="code-input" placeholder="ادخل كود التفعيل هنا"
-          maxlength="25" autocomplete="off" autocapitalize="characters" spellcheck="false"
-          oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9\-]/g,'')"
-          onkeydown="if(event.key==='Enter')activateCourse()">
-        <button class="activate-btn" id="activateBtn" onclick="activateCourse()">🔑 تفعيل الكورس</button>
+    <div class="gate-container">
+      <div class="activation-gate">
+        <div class="gate-icon">🔒</div>
+        <h1 class="gate-title">تفعيل الكورس مطلوب</h1>
+        <p class="gate-subtitle">هذا الكورس مدفوع. يرجى إدخال كود التفعيل الممنوح لك من قِبل المدرس للوصول المباشر لكافة الدروس والفيديوهات والملازم.</p>
+        <div class="gate-course-name" id="gateCourseTitle">—</div>
+        <div class="code-input-wrap">
+          <input type="text" id="activationCodeInput" class="code-input" placeholder="ادخل كود التفعيل هنا"
+            maxlength="25" autocomplete="off" autocapitalize="characters" spellcheck="false"
+            oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9\-]/g,'')"
+            onkeydown="if(event.key==='Enter')activateCourse()">
+          <button class="activate-btn" id="activateBtn" onclick="activateCourse()">🔑 تفعيل الكورس</button>
+        </div>
+        <div class="activation-error" id="activationError"></div>
+        <p class="gate-help">لا تمتلك كود تفعيل؟ <a href="index.html#courses">تواصل مع دكتور محمد عبد الله للاشتراك</a></p>
       </div>
-      <div class="activation-error" id="activationError"></div>
-      <p class="gate-help">لا تمتلك كود تفعيل؟ <a href="index.html#courses">تواصل مع دكتور محمد عبد الله للاشتراك</a></p>
+
+      <!-- معاينة عناوين الدروس قبل التفعيل (محتواها مغلق) -->
+      <div class="gate-curriculum-preview" id="gateCurriculumPreview">
+        <div class="gate-preview-header">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:22px;">📚</span>
+            <h2 style="font-size:17px; font-weight:800; margin:0;">فهرس ومحتويات الكورس</h2>
+          </div>
+          <span class="preview-locked-badge">🔒 مغلق حتى التفعيل</span>
+        </div>
+        <p class="preview-hint">عناوين الدروس والمحاضرات المتضمنة في هذا الكورس. ستفتح بالكامل مع الفيديوهات والملازم فور إدخال كود التفعيل أعلاه:</p>
+        <div class="gate-lessons-list" id="gateLessonsList">
+          <!-- Rendered dynamically from course.lessons -->
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1126,6 +1232,28 @@
   ============================================================ */
   document.addEventListener('DOMContentLoaded', async () => {
     applyTheme();
+
+    // التحقق من تسجيل دخول الطالب أولاً
+    const currentUserJson = localStorage.getItem('physics_current_user');
+    if (!currentUserJson) {
+      const returnUrl = encodeURIComponent(window.location.href);
+      window.location.href = `login.html?returnUrl=${returnUrl}`;
+      return;
+    }
+
+    try {
+      const u = JSON.parse(currentUserJson);
+      if (u && u.name) {
+        const initial = (u.name.trim().split(' ')[0] || u.name).charAt(0);
+        const avatarLink = document.getElementById('headerProfileAvatar');
+        const initialEl = document.getElementById('headerProfileInitial');
+        if (avatarLink && initialEl) {
+          initialEl.textContent = initial;
+          avatarLink.style.display = 'block';
+        }
+      }
+    } catch(e) {}
+
     const urlParams = new URLSearchParams(location.search);
     const id = urlParams.get('id') || urlParams.get('courseId');
     if (!id) {
@@ -1210,7 +1338,67 @@
     } else {
       showState('gate');
       document.getElementById('gateCourseTitle').textContent = course.title;
+      renderGateCurriculumPreview();
     }
+  }
+
+  /* ============================================================
+     5.1. RENDER LOCKED CURRICULUM PREVIEW (BEFORE ACTIVATION)
+  ============================================================ */
+  function renderGateCurriculumPreview() {
+    const listEl = document.getElementById('gateLessonsList');
+    if (!listEl) return;
+    const lessons = sortedLessons();
+    if (!lessons || !lessons.length) {
+      listEl.innerHTML = '<p style="color:var(--text3); font-size:13px; text-align:center; padding:12px;">جاري إعداد محتوى هذا الكورس...</p>';
+      return;
+    }
+
+    let html = '';
+    lessons.forEach((l, idx) => {
+      const segs = sortedSegs(l);
+      html += `
+        <div class="gate-lesson-item">
+          <div class="gate-lesson-title">
+            <span>📖 ${esc(l.title || `الدرس ${idx + 1}`)}</span>
+            <span style="font-size:12px; color:var(--accent); font-weight:700;">🔒 مغلق</span>
+          </div>
+      `;
+
+      if (segs && segs.length > 0) {
+        html += `<div class="gate-segments-list">`;
+        segs.forEach((s, sIdx) => {
+          html += `
+            <div class="gate-segment-item">
+              <span>▶️ ${esc(s.title || `فيديو ${sIdx + 1}`)}</span>
+              <span class="gate-segment-duration">${esc(s.duration || 'فيديو')} 🔒</span>
+            </div>
+          `;
+        });
+        if (l.pdfUrl || l.pdfName) {
+          html += `
+            <div class="gate-segment-item">
+              <span>📄 ${esc(l.pdfName || 'ملزمة ومذكرة الدرس')}</span>
+              <span class="gate-segment-duration">ملزمة PDF 🔒</span>
+            </div>
+          `;
+        }
+        html += `</div>`;
+      } else if (l.pdfUrl || l.pdfName) {
+        html += `
+          <div class="gate-segments-list">
+            <div class="gate-segment-item">
+              <span>📄 ${esc(l.pdfName || 'ملزمة ومذكرة الدرس')}</span>
+              <span class="gate-segment-duration">ملزمة PDF 🔒</span>
+            </div>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
+    });
+
+    listEl.innerHTML = html;
   }
 
   /* ============================================================
@@ -1345,6 +1533,17 @@
           u.enrolledCourses.push(String(course.id));
         }
         localStorage.setItem('physics_current_user', JSON.stringify(u));
+        // Sync with Firestore student document
+        try {
+          const db = await waitDb(2000);
+          if (u.id) {
+            await db.collection('students').doc(u.id).update({
+              enrolledCourses: u.enrolledCourses
+            });
+          }
+        } catch (syncErr) {
+          console.warn('[markUsed] Student doc enrollment sync:', syncErr.message);
+        }
       }
     } catch(e){}
   }

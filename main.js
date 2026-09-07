@@ -443,8 +443,10 @@ function initAuthState() {
     authButtonsContainer.forEach(container => {
       container.innerHTML = `
         <div class="user-profile-badge">
-          <div class="user-avatar">${initial}</div>
-          <span class="user-name">أهلاً، ${firstName}</span>
+          <a href="profile.html" class="user-profile-link" title="عرض وتعديل الملف الشخصي" style="display:flex; align-items:center; gap:8px; text-decoration:none; color:inherit;">
+            <div class="user-avatar" style="cursor:pointer; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" title="الملف الشخصي">${initial}</div>
+            <span class="user-name" style="cursor:pointer;">أهلاً، ${firstName}</span>
+          </a>
           <a href="#" class="logout-link" title="تسجيل الخروج" onclick="logoutUser(event)">خروج</a>
         </div>
       `;
@@ -467,7 +469,7 @@ window.logoutUser = function(e) {
    7. تفاعل فتح الكورسات والانتقال إلى صفحة الدروس (Lessons)
    ========================================================================== */
 function initCourseActions() {
-  // ربط بطاقات الكورسات بالكامل للانتقال إلى صفحة الدروس
+  // ربط بطاقات الكورسات بالكامل للانتقال إلى صفحة الدروس مع التحقق من تسجيل الدخول
   const attachCardEvents = () => {
     const cards = document.querySelectorAll('.course-card');
     cards.forEach(card => {
@@ -479,7 +481,13 @@ function initCourseActions() {
       card.onclick = (e) => {
         // تجنب التكرار إذا تم النقر على زر الاشتراك مباشرة
         if (e.target.closest('.btn-course-enroll')) return;
-        window.location.href = `lessons.html?id=${encodeURIComponent(courseId)}`;
+        const targetUrl = `lessons.html?id=${encodeURIComponent(courseId)}`;
+        const currentUser = localStorage.getItem('physics_current_user');
+        if (!currentUser) {
+          window.location.href = `login.html?returnUrl=${encodeURIComponent(targetUrl)}`;
+          return;
+        }
+        window.location.href = targetUrl;
       };
     });
 
@@ -489,7 +497,13 @@ function initCourseActions() {
         e.preventDefault();
         e.stopPropagation();
         const courseId = btn.getAttribute('data-course-id') || 'sec1';
-        window.location.href = `lessons.html?id=${encodeURIComponent(courseId)}`;
+        const targetUrl = `lessons.html?id=${encodeURIComponent(courseId)}`;
+        const currentUser = localStorage.getItem('physics_current_user');
+        if (!currentUser) {
+          window.location.href = `login.html?returnUrl=${encodeURIComponent(targetUrl)}`;
+          return;
+        }
+        window.location.href = targetUrl;
       };
     });
   };

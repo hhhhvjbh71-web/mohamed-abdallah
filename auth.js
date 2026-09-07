@@ -9,7 +9,25 @@ document.addEventListener('DOMContentLoaded', () => {
   initLoginForm();
   initPasswordToggles();
   initPhoneInputsRestriction();
+  preserveReturnUrlInLinks();
 });
+
+function preserveReturnUrlInLinks() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const returnUrl = urlParams.get('returnUrl');
+  if (returnUrl) {
+    document.querySelectorAll('a[href*="login.html"], a[href*="register.html"]').forEach(link => {
+      try {
+        const url = new URL(link.getAttribute('href'), window.location.href);
+        url.searchParams.set('returnUrl', returnUrl);
+        link.setAttribute('href', url.pathname.split('/').pop() + url.search);
+      } catch (e) {
+        const separator = link.getAttribute('href').includes('?') ? '&' : '?';
+        link.setAttribute('href', link.getAttribute('href') + separator + 'returnUrl=' + encodeURIComponent(returnUrl));
+      }
+    });
+  }
+}
 
 /* ==========================================================================
    1. تقييد أرقام الهواتف في التسجيل بألا تتجاوز 11 رقماً وأن تكون أرقاماً فقط
@@ -227,9 +245,7 @@ function initRegisterForm() {
 
       showToast(`🎉 مرحباً بك يا بطل الفيزياء! تم إنشاء حسابك بنجاح`, 'success');
 
-      setTimeout(() => {
-        redirectAfterAuth();
-      }, 1200);
+      redirectAfterAuth();
 
     } catch (err) {
       console.error('❌ خطأ في التسجيل:', err);
@@ -399,9 +415,7 @@ function initLoginForm() {
 
       showToast(`✅ تم تسجيل الدخول بنجاح! مرحباً ${userData.name.split(' ')[0]} 🎉`, 'success');
 
-      setTimeout(() => {
-        redirectAfterAuth();
-      }, 1000);
+      redirectAfterAuth();
 
     } catch (err) {
       console.error('❌ خطأ في تسجيل الدخول:', err);
