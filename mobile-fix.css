@@ -1,0 +1,1194 @@
+/* ==========================================================================
+   📱 MOBILE PROFESSIONAL FIX — منصة دكتور محمد عبد الله
+   ملف التجاوب الاحترافي الشامل للهاتف — يُضاف في نهاية style.css
+   ========================================================================== */
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١. قواعد أساسية للهاتف — Safe Area + Touch + Scroll                   │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* نص واضح على الشاشات الصغيرة */
+*, *::before, *::after {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* حماية من الفيض الأفقي */
+.container,
+section,
+.auth-card,
+.auth-main,
+.modal-box,
+.mobile-drawer {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ٢. الهيدر وشريط التنقل — Navbar Mobile                                │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+/* ── 480px ke down ── */
+@media (max-width: 480px) {
+
+  .container {
+    padding: 0 16px;
+  }
+
+  /* الهيدر ارتفاعه ثابت محكم */
+  .navbar {
+    height: 60px;
+    gap: 8px;
+  }
+
+  /* الشعار: أصغر ومتراص */
+  .brand-logo {
+    gap: 9px;
+    flex-shrink: 0;
+  }
+
+  .brand-icon,
+  .brand-icon.physics-magnet-logo {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 10px;
+  }
+
+  .brand-icon svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .brand-title {
+    font-size: 0.92rem;
+    line-height: 1.2;
+  }
+
+  .brand-subtitle {
+    font-size: 0.68rem;
+  }
+
+  .brand-subtitle::before {
+    width: 5px;
+    height: 5px;
+  }
+
+  /* أزرار الهيدر */
+  .theme-toggle-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .theme-icon-sun,
+  .theme-icon-moon {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* إخفاء أزرار الديسكتوب في الهيدر */
+  .nav-desktop-actions {
+    display: none !important;
+  }
+
+  /* زر هامبورجر */
+  .hamburger-btn {
+    width: 36px;
+    height: 36px;
+    padding: 7px;
+    flex-shrink: 0;
+  }
+
+  .hamburger-line {
+    width: 19px;
+    height: 2px;
+  }
+
+  /* القائمة الجانبية (Drawer) */
+  .mobile-drawer {
+    width: 88% !important;
+    max-width: 300px;
+    padding: 20px 16px;
+    top: 60px;
+    height: calc(100vh - 60px);
+    gap: 16px;
+  }
+
+  .drawer-overlay {
+    top: 60px;
+    height: calc(100vh - 60px);
+  }
+
+  .drawer-link {
+    padding: 13px 14px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    min-height: 48px; /* touch target */
+  }
+
+  .drawer-actions {
+    padding-top: 16px;
+    gap: 10px;
+  }
+
+  .drawer-actions .btn {
+    min-height: 48px;
+    font-size: 0.95rem;
+    border-radius: 12px;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ٣. البانر الرئيسي (Hero Section) — Mobile                             │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 48px 0 56px 0;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    text-align: center;
+  }
+
+  .hero-content {
+    align-items: center;
+    gap: 18px;
+  }
+
+  .hero-cta-group {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* إخفاء إطار الصورة في البانر على الموبايل — يأخذ مساحة بدون فائدة */
+  .hero-image-wrapper {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 36px 0 44px 0;
+  }
+
+  .hero-badge {
+    padding: 7px 16px;
+    gap: 8px;
+  }
+
+  .hero-badge-text {
+    font-size: 0.85rem;
+  }
+
+  .hero-title .title-name {
+    font-size: 1.9rem !important;
+    line-height: 1.2;
+  }
+
+  .hero-title .title-sub {
+    font-size: 1.25rem !important;
+    gap: 8px;
+  }
+
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .hero-btn-main,
+  .hero-btn-sub {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 1rem;
+    border-radius: 12px;
+    justify-content: center;
+    min-height: 50px;
+  }
+
+  /* Quick features */
+  .hero-quick-features {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ٤. قسم الكورسات (Courses Section) — Mobile                            │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 768px) {
+  .courses-section {
+    padding: 48px 0;
+  }
+
+  .section-title {
+    font-size: 1.7rem;
+  }
+
+  .courses-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .courses-filter-tabs {
+    gap: 7px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    min-height: 38px;
+  }
+}
+
+@media (max-width: 480px) {
+  .courses-section {
+    padding: 36px 0;
+  }
+
+  .section-header {
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .section-desc {
+    font-size: 0.92rem;
+  }
+
+  .course-card {
+    border-radius: 16px;
+  }
+
+  .course-banner {
+    height: 150px;
+  }
+
+  .course-physics-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .course-body {
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .course-title {
+    font-size: 1.08rem;
+  }
+
+  .course-desc {
+    font-size: 0.88rem;
+  }
+
+  .course-footer {
+    padding-top: 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .course-footer .btn {
+    width: 100%;
+    min-height: 46px;
+    justify-content: center;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ٥. قسم المعلم (About Section) — Mobile                                │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 768px) {
+  .about-section {
+    padding: 48px 0;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .teacher-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-section {
+    padding: 36px 0;
+  }
+
+  .about-card {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+  }
+
+  .stat-item {
+    padding: 13px 10px;
+  }
+
+  .highlight-item {
+    font-size: 0.88rem;
+    gap: 10px;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ٦. الفوتر — Footer Mobile                                              │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 768px) {
+  .main-footer {
+    padding: 40px 0 24px 0;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding-top: 20px;
+  }
+
+  .footer-social-links {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-title {
+    font-size: 1rem;
+  }
+
+  .footer-link {
+    font-size: 0.88rem;
+    min-height: 36px;
+  }
+
+  .social-btn {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ٧. صفحات تسجيل الدخول والتسجيل (Auth Pages) — Mobile                 │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 768px) {
+  .auth-page .main-header {
+    position: sticky;
+  }
+
+  .auth-main {
+    padding: 24px 16px;
+    align-items: flex-start;
+    padding-top: 28px;
+  }
+
+  .auth-card {
+    border-radius: 18px;
+    padding: 24px 20px;
+    max-width: 100% !important;
+  }
+
+  .auth-header {
+    margin-bottom: 22px;
+  }
+
+  .auth-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .auth-header p {
+    font-size: 0.88rem;
+  }
+
+  .auth-header .brand-icon {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 12px;
+  }
+
+  .auth-form {
+    gap: 14px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-main {
+    padding: 16px 12px;
+    padding-top: 20px;
+  }
+
+  .auth-card {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .auth-header {
+    margin-bottom: 18px;
+  }
+
+  .auth-header h1 {
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+  }
+
+  .auth-header p {
+    font-size: 0.82rem;
+  }
+
+  .auth-header .brand-icon {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 10px;
+  }
+
+  .auth-form {
+    gap: 12px;
+  }
+
+  /* حقول الإدخال — Touch friendly */
+  .form-input,
+  .form-select {
+    padding: 13px 12px;
+    padding-left: 40px;
+    font-size: 16px !important; /* يمنع الـ zoom في iOS */
+    border-radius: 10px;
+    min-height: 50px;
+  }
+
+  .form-label {
+    font-size: 0.85rem;
+  }
+
+  .field-hint {
+    font-size: 0.74rem;
+  }
+
+  .input-icon {
+    left: 12px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .password-toggle-btn {
+    left: 10px;
+  }
+
+  /* زر "تسجيل الدخول" / "إنشاء حساب" */
+  .auth-form .btn-primary {
+    min-height: 52px;
+    font-size: 1rem;
+    border-radius: 12px;
+    margin-top: 4px;
+  }
+
+  /* صندوق الحساب التجريبي */
+  .auth-form > div[style*="background: rgba(56"] {
+    font-size: 0.78rem;
+    padding: 9px 12px;
+    border-radius: 10px;
+  }
+
+  .form-footer-action {
+    font-size: 0.85rem;
+    margin-top: 10px;
+  }
+
+  /* خيار تذكرني */
+  #rememberMe {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* رابط نسيت كلمة المرور */
+  .form-group > div > a {
+    font-size: 0.76rem;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ٨. نافذة المودال (Modal) — Mobile                                     │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 480px) {
+  .modal-backdrop {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .modal-box {
+    padding: 22px 18px;
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    animation: slideUp 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);   opacity: 1; }
+  }
+
+  .modal-close-btn {
+    top: 14px;
+    left: 14px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ٩. الإشعارات (Toast) — Mobile                                         │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 480px) {
+  .toast-container {
+    top: 12px;
+    width: calc(100% - 24px);
+    max-width: 100%;
+  }
+
+  .toast {
+    padding: 13px 16px;
+    font-size: 0.88rem;
+    border-radius: 12px;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١٠. الأزرار العامة — Mobile                                           │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 480px) {
+  .btn {
+    min-height: 44px;
+    padding: 10px 18px;
+    font-size: 0.92rem;
+    border-radius: 10px;
+    touch-action: manipulation;
+  }
+
+  .btn-sm {
+    min-height: 38px;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    border-radius: 8px;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١١. صفحة الدروس (lessons.html) — Mobile                              │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 768px) {
+  /* الهيدر */
+  .lessons-header {
+    padding: 0 14px;
+  }
+
+  .header-inner {
+    height: 58px;
+    gap: 10px;
+  }
+
+  .back-btn {
+    padding: 7px 11px;
+    font-size: 12px;
+    border-radius: 9px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .header-course-title {
+    font-size: 13px;
+    gap: 7px;
+  }
+
+  .header-badge {
+    display: none; /* يأخذ مساحة على الهاتف */
+  }
+
+  .theme-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  /* التخطيط */
+  .lessons-layout {
+    flex-direction: column !important;
+    padding: 0 !important;
+  }
+
+  /* الشريط الجانبي قائمة الدروس */
+  .lessons-sidebar {
+    width: 100% !important;
+    position: static !important;
+    height: auto !important;
+    max-height: 45vh !important;
+    border-left: none !important;
+    border-bottom: 1px solid var(--border, #1e2d40) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* منطقة الفيديو */
+  .lessons-main {
+    width: 100% !important;
+    padding: 14px !important;
+    overflow-y: auto !important;
+    min-height: 55vh !important;
+  }
+
+  /* مشغل الفيديو */
+  .video-player-wrap {
+    border-radius: 12px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .video-player-wrap iframe,
+  .video-player-wrap video {
+    border-radius: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .lessons-sidebar {
+    max-height: 42vh !important;
+  }
+
+  /* عناصر قائمة الدروس */
+  .lesson-item,
+  [class*="lesson-row"],
+  [class*="seg-item"] {
+    padding: 12px 14px !important;
+    font-size: 13px !important;
+    min-height: 48px;
+  }
+
+  /* معلومات الدرس */
+  .lesson-info-section,
+  .lesson-desc-section {
+    font-size: 0.88rem !important;
+    line-height: 1.6 !important;
+  }
+
+  /* نوافذ منبثقة الدروس */
+  .lessons-modal,
+  .quiz-modal {
+    border-radius: 18px 18px 0 0 !important;
+    max-height: 90vh !important;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١٢. لوحة التحكم (dashboard.html) — Mobile Overrides                  │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+/* هذه القواعد داخل dashboard.html نفسه — نضيفها هنا كدعم إضافي */
+
+@media (max-width: 768px) {
+  .dashboard-body body,
+  body:has(.sidebar) {
+    overflow-x: hidden;
+  }
+
+  /* السايدبار يتحول لـ drawer */
+  .sidebar {
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 200;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* المحتوى الرئيسي يملأ كل العرض */
+  .main {
+    margin-right: 0 !important;
+    width: 100% !important;
+  }
+
+  /* التوب بار */
+  .topbar {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .topbar-title {
+    font-size: 16px;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+
+  .topbar-actions button {
+    padding: 7px 10px;
+    font-size: 12px;
+    border-radius: 9px;
+  }
+
+  /* المحتوى */
+  .content {
+    padding: 14px;
+  }
+
+  /* بطاقات الإحصاء */
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  /* جدول الطلاب */
+  .table-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 580px;
+  }
+
+  /* بطاقات الكورسات في الداشبورد */
+  .courses-admin-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .student-courses-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* المودال في الداشبورد */
+  .modal-overlay,
+  .code-modal-overlay {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .modal {
+    border-radius: 22px 22px 0 0 !important;
+    max-height: 90vh !important;
+    padding: 22px 18px !important;
+  }
+
+  .code-modal {
+    border-radius: 22px 22px 0 0;
+    max-height: 90vh;
+    padding: 28px 20px;
+  }
+
+  /* Analytics */
+  .analytics-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    padding: 10px 12px;
+  }
+
+  .topbar-title {
+    font-size: 14px;
+  }
+
+  .content {
+    padding: 12px;
+  }
+
+  /* بطاقات الإحصاء — عمود واحد */
+  .stats-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 14px;
+    gap: 10px;
+    border-radius: 14px;
+  }
+
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 19px;
+    border-radius: 12px;
+  }
+
+  .stat-val {
+    font-size: 22px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+  }
+
+  /* كروت الكورسات */
+  .courses-admin-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .course-admin-card {
+    border-radius: 14px;
+  }
+
+  /* الجداول */
+  table {
+    min-width: 520px;
+  }
+
+  th, td {
+    padding: 11px 14px;
+    font-size: 13px;
+  }
+
+  .table-header {
+    padding: 14px 16px;
+  }
+
+  .table-header h3 {
+    font-size: 15px;
+  }
+
+  .table-search {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .table-search input {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  /* Badges */
+  .badge {
+    font-size: 11px;
+    padding: 3px 9px;
+  }
+
+  /* أزرار الإجراء في الجداول */
+  .action-btns {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .btn-view,
+  .btn-delete {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 7px;
+  }
+
+  /* بطاقات الكورسات للطالب */
+  .scc-cover {
+    min-height: 170px;
+    font-size: 56px;
+  }
+
+  .scc-body {
+    padding: 16px;
+  }
+
+  .scc-title {
+    font-size: 15px;
+  }
+
+  .scc-desc {
+    font-size: 12px;
+  }
+
+  .scc-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .scc-btn-enter,
+  .scc-btn-pay,
+  .scc-btn-free {
+    padding: 12px;
+    font-size: 13px;
+    border-radius: 11px;
+    min-height: 46px;
+  }
+
+  .scc-btn-code {
+    flex: 1 1 100%;
+    min-height: 44px;
+    font-size: 13px;
+  }
+
+  /* مودال كود التفعيل */
+  .code-modal {
+    padding: 24px 18px;
+  }
+
+  .code-modal h3 {
+    font-size: 18px;
+  }
+
+  .code-input-wrap input {
+    font-size: 20px;
+    letter-spacing: 6px;
+    padding: 14px 16px;
+    border-radius: 12px;
+  }
+
+  /* أزرار في المودال */
+  .btn-save {
+    padding: 13px;
+    font-size: 14px;
+    border-radius: 11px;
+    min-height: 48px;
+  }
+
+  .btn-cancel {
+    padding: 13px 16px;
+    font-size: 14px;
+    border-radius: 11px;
+    min-height: 48px;
+  }
+
+  .modal-actions {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .modal-actions .btn-cancel {
+    flex: 0 0 auto;
+  }
+
+  .modal-actions .btn-save {
+    flex: 1;
+  }
+
+  /* شاشة فارغة */
+  .empty-state {
+    padding: 40px 16px;
+  }
+
+  .empty-state .icon {
+    font-size: 48px;
+  }
+
+  .empty-state p {
+    font-size: 14px;
+  }
+
+  /* السايد بار الداخلي */
+  .sidebar-logo {
+    padding: 18px 16px;
+  }
+
+  .sidebar-logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 17px;
+  }
+
+  .sidebar-logo-text {
+    font-size: 14px;
+  }
+
+  .nav-item {
+    padding: 12px 14px;
+    font-size: 14px;
+    min-height: 48px;
+    border-radius: 9px;
+  }
+
+  .nav-item .icon {
+    font-size: 17px;
+  }
+
+  .admin-info {
+    padding: 10px;
+  }
+
+  .admin-name {
+    font-size: 12px;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١٣. تحسينات الـ Safe Area للشاشات ذات الـ notch                      │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  .main-header,
+  .lessons-header {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .mobile-drawer {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .auth-main {
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .toast-container {
+    top: calc(12px + env(safe-area-inset-top, 0px));
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١٤. تحسينات أداء اللمس والسحب (Performance & Scrolling)              │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+/* تحسين أداء التمرير */
+.mobile-drawer,
+.modal-box,
+.modal,
+.table-card,
+.lessons-sidebar,
+.lessons-main {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* منع تحديد النص في الأزرار */
+.btn,
+.nav-link,
+.drawer-link,
+.filter-tab,
+.hamburger-btn,
+.theme-toggle-btn,
+.nav-item,
+.back-btn {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* تحسين حجم هدف اللمس لجميع الأزرار والروابط */
+@media (max-width: 768px) {
+  a, button, input[type="submit"], input[type="button"],
+  .btn, .nav-link, .drawer-link, .filter-tab,
+  .nav-item, .back-btn, .theme-btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* استثناء العناصر الخطية */
+  .footer-link, .form-footer-action a {
+    min-height: unset;
+    display: inline;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١٥. إصلاح font-size=16px على iOS لمنع الـ auto zoom                  │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 768px) {
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important;
+    touch-action: manipulation;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١٦. الوضع النهاري (Light Mode) — Mobile fixes                        │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 480px) {
+  [data-theme="light"] .mobile-drawer {
+    background: #ffffff;
+  }
+
+  [data-theme="light"] .auth-card {
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.1);
+  }
+
+  [data-theme="light"] .course-card {
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١٧. Utility — مخفي / مرئي على الموبايل فقط                          │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 480px) {
+  .hide-mobile { display: none !important; }
+}
+
+@media (min-width: 481px) {
+  .show-mobile-only { display: none !important; }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١٨. نبضة تحميل (Loading Spinner) — تحسين الهاتف                     │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 480px) {
+  .loading-spinner,
+  [class*="spinner"] {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* نهاية ملف التجاوب الاحترافي للهاتف */
