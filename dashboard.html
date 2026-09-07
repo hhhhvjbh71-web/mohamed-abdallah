@@ -891,6 +891,29 @@ window.GRADE_OPTIONS = window.GRADE_OPTIONS || [
       <div class="topbar-title" id="pageTitle">نظرة عامة 📊</div>
     </div>
     <div class="topbar-actions">
+      <button
+        id="btnRefreshData"
+        title="تحديث كل البيانات من Firebase (طلاب + كورسات)"
+        onclick="(async function(){
+          const btn=document.getElementById('btnRefreshData');
+          if(btn){btn.disabled=true;btn.textContent='⏳ تحديث...';}
+          try{
+            await syncPlatformStudents(false);
+            const doc=await window.db.collection('platform_data').doc('courses_list').get();
+            if(doc.exists){
+              const d=doc.data()||{};
+              const raw=Array.isArray(d.items)?d.items:(Array.isArray(d.courses)?d.courses:[]);
+              courses=getPublishedCoursePayload(raw).filter(c=>c&&c.id&&!_legacySeedCourseTitles.has(c.title));
+              localStorage.setItem('alsaqr_courses',JSON.stringify(courses));
+            } else { courses=[]; localStorage.removeItem('alsaqr_courses'); }
+            _refreshAllCoursesUI();
+            renderOverview();
+            showNotification('✅ تم تحديث البيانات من Firebase','success');
+          }catch(e){showNotification('❌ فشل التحديث: '+e.message,'error');}
+          finally{if(btn){btn.disabled=false;btn.textContent='🔄 تحديث';}}
+        })()"
+        style="background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;border-color:transparent;font-weight:700;"
+      >🔄 تحديث</button>
       <button onclick="window.open('index.html','_blank')">🌐 الموقع</button>
 
       <!-- ✅ زرار حفظ Snapshot (JSON كامل من Firebase) -->
@@ -2420,46 +2443,69 @@ else { // fallback لو الدالة لسه ما اتعرّفتش
 }
 
 let courses = JSON.parse(localStorage.getItem('alsaqr_courses') || '[]');
-// Firebase is the source of truth. Do not seed demo courses in localStorage:
-// that made old/default courses appear in some browsers and disappear in others.
+// Firebase هو المصدر الوحيد الموثوق — لا يُسمح بأي كورسات افتراضية/تجريبية محلية.
+// هذه القائمة تضم جميع الكورسات الافتراضية المعروفة التي أُضيفت من النظام سابقاً.
 const _legacySeedCourseTitles = new Set([
+  // كورسات العراقي/طناني القديمة
   'المراجعة النهائية الصف الأول الثانوي',
   'المراجعة النهائية الصف الثاني الثانوي',
-  'مراجعة التربية الدينية الصف الثالث'
+  'مراجعة التربية الدينية الصف الثالث',
+  // كورسات demo / تجريبية شائعة
+  'كورس تجريبي',
+  'كورس نموذجي',
+  'Demo Course',
+  'Sample Course',
+  'كورس عينة',
+  'الكورس الأول',
+  'مرحباً بك في المنصة',
+  'دورة تجريبية',
+  'دورة نموذجية',
+  'Test Course',
+  'Default Course',
+  'كورس افتراضي',
+  // أي كورسات بدون عنوان أو بعنوان فارغ (تُزال تلقائياً)
+  '',
+  'بدون عنوان',
+  'Untitled'
 ]);
+
+// ── مسح فوري لأي كورسات افتراضية من الذاكرة المحلية ──
 if (Array.isArray(courses) && courses.some(c => _legacySeedCourseTitles.has(c && c.title))) {
+  const before = courses.length;
   courses = courses.filter(c => !_legacySeedCourseTitles.has(c && c.title));
+  const removed = before - courses.length;
+  if (removed > 0) {
+    localStorage.setItem('alsaqr_courses', JSON.stringify(courses));
+    console.log(`[courses-init] 🗑️ تم مسح ${removed} كورس افتراضي من localStorage`);
+  }
+}
+// حذف أي كورسات لها id=0 أو بدون id (علامة على كورسات seed قديمة)
+if (Array.isArray(courses) && courses.some(c => !c || !c.id)) {
+  courses = courses.filter(c => c && c.id);
   localStorage.setItem('alsaqr_courses', JSON.stringify(courses));
 }
 localStorage.setItem('alsaqr_courses_initialized', '1');
 
-// ── اختبار اتصال Firebase عند التحميل ──
+// ── جلب بيانات الطلاب من Firebase عند التحميل الأولي للداشبورد ──
 (async () => {
-  return; // Disable automatic full students live listener to reduce Firestore reads.
-  // انتظر db
+  // انتظر db بحد أقصى 8 ثواني
   if (!window.db) {
     await new Promise(r => {
-      const t = setInterval(() => { if (window.db) { clearInterval(t); r(); } }, 100);
+      const t = setInterval(() => { if (window.db) { clearInterval(t); r(); } }, 150);
       setTimeout(() => { clearInterval(t); r(); }, 8000);
     });
   }
   if (!window.db) {
     console.error('[STARTUP] Firebase db not available after 8s — check firebase-config.js');
-    showNotification('⚠️ Firebase غير متاح — تحقق من ملف firebase-config.js', 'error');
     return;
   }
-  // اختبار قراءة وكتابة
+  console.log('[STARTUP] ✅ Firebase متاح — جاري جلب الطلاب الأولي...');
+  // جلب الطلاب في الخلفية بدون إشعار (صامت)
   try {
-    await window.db.collection('platform_data').doc('_connectivity_test').set({ ts: Date.now() });
-    console.log('[STARTUP] ✅ Firebase read/write OK');
+    await syncPlatformStudents(false);
+    console.log('[STARTUP] ✅ تم تحميل الطلاب من Firebase بنجاح');
   } catch(e) {
-    console.error('[STARTUP] ❌ Firebase write test FAILED:', e.code, e.message);
-    if (e.code === 'permission-denied') {
-      showNotification(
-        '🔴 Firestore Rules تحتاج تحديث: افتح Firebase Console → Firestore → Rules وانشر القواعد الجديدة',
-        'error'
-      );
-    }
+    console.warn('[STARTUP] students sync failed:', e.message);
   }
 })();
 
@@ -2469,112 +2515,116 @@ localStorage.setItem('alsaqr_courses_initialized', '1');
 let _coursesDirty = false;
 let _coursesSyncVersion = 0;
 
+// ── دالة مساعدة: تُحدِّث الـ UI فور تغيُّر بيانات الكورسات ──
+function _refreshAllCoursesUI() {
+  try {
+    const activePage = document.querySelector('.page.active');
+    const activeId = activePage ? activePage.id.replace('page-', '') : 'overview';
+    if (activeId === 'courses' && typeof renderCoursesAdmin === 'function') renderCoursesAdmin();
+    if (activeId === 'student-courses' && typeof renderStudentCourses === 'function') renderStudentCourses();
+    if (activeId === 'overview' && typeof renderOverview === 'function') renderOverview();
+    if (typeof refreshCoursesUI === 'function') refreshCoursesUI();
+    // تحديث badge عدد الكورسات في الشريط الجانبي إذا وُجد
+    const badge = document.getElementById('coursesBadge');
+    if (badge) badge.textContent = courses.length;
+  } catch(e) { console.warn('[UI] refresh error:', e.message); }
+}
+
 // Load courses from Firebase on startup
 (async () => {
-  // انتظر حتى يكون window.db جاهزاً (max 6 ثواني)
+  // انتظر حتى يكون window.db جاهزاً (max 8 ثواني)
   if (!window.db) {
     await new Promise(resolve => {
       const t = setInterval(() => { if (window.db) { clearInterval(t); resolve(); } }, 150);
-      setTimeout(() => { clearInterval(t); resolve(); }, 6000);
+      setTimeout(() => { clearInterval(t); resolve(); }, 8000);
     });
   }
   if (!window.db) {
     console.warn('[courses-init] Firebase not available, using localStorage');
+    // عرض ما هو محلي (مع فلترة الكورسات الافتراضية)
+    courses = courses.filter(c => c && c.id && !_legacySeedCourseTitles.has(c.title));
+    _refreshAllCoursesUI();
     return;
   }
 
+  // ── 1. LIVE LISTENER (Real-Time): يُحدَّث تلقائياً عند أي تغيير من أي جهاز ──
   try {
-    // ── LIVE LISTENER بدل قراءة لمرة واحدة ──
-    // onSnapshot بيفتح اتصال Real-Time مع Firestore: أي تعديل يحصل من أي جهاز
-    // (إضافة/تعديل/حذف كورس) بيوصل هنا فوراً بدون الحاجة لعمل Refresh يدوي،
-    // وبيمنع ظهور نسخة قديمة/مخزنة (Cache) بدل آخر بيانات فعلية.
     window.db.collection('platform_data').doc('courses_list')
-      .onSnapshot({ includeMetadataChanges: false }, async (doc) => {
-        // تجاهل أي قراءة جاية من الكاش المحلي فقط (لسه ما اتأكدتش من السيرفر)
-        // عشان منعرضش بيانات قديمة على الشاشة قبل ما تتأكد من Firebase.
-        if (doc.metadata && doc.metadata.fromCache && navigator.onLine !== false) {
-          // لو من الكاش وفي اتصال إنترنت فعلي، سيبها تكمل — Firestore هيبعت تحديث حقيقي فور وصوله.
-        }
+      .onSnapshot({ includeMetadataChanges: false }, (doc) => {
+        // Firebase هو المصدر الوحيد — نقبل حتى القائمة الفارغة (معناها لا توجد كورسات فعلية)
         let fbCourses = [];
         if (doc.exists) {
           const data = doc.data() || {};
-          const rawFbCourses = Array.isArray(data.items) ? data.items : (Array.isArray(data.courses) ? data.courses : []);
-          fbCourses = getPublishedCoursePayload(rawFbCourses);
+          const raw = Array.isArray(data.items) ? data.items
+                    : Array.isArray(data.courses) ? data.courses : [];
+          // فلتر الكورسات الافتراضية/التجريبية من Firebase أيضاً
+          fbCourses = getPublishedCoursePayload(raw)
+            .filter(c => c && c.id && !_legacySeedCourseTitles.has(c.title));
         }
-        if (fbCourses.length > 0) {
+
+        // ── إذا تغيّر عدد الكورسات أو كانت قائمة Firebase تحمل بيانات حقيقية ──
+        const fromServer = !(doc.metadata && doc.metadata.fromCache);
+        if (fromServer || fbCourses.length > 0) {
           courses = fbCourses;
           localStorage.setItem('alsaqr_courses', JSON.stringify(courses));
           localStorage.setItem('alsaqr_courses_initialized', '1');
           localStorage.setItem('alsaqr_courses_fb_migrated', '1');
-          console.log('[courses-live] تحديث فوري:', courses.length, 'كورس');
-          const activePage = document.querySelector('.page.active');
-          const activeId = activePage ? activePage.id.replace('page-', '') : 'overview';
-          if (activeId === 'courses' && typeof renderCoursesAdmin === 'function') { try { renderCoursesAdmin(); } catch (e) {} }
-          if (activeId === 'student-courses' && typeof renderStudentCourses === 'function') { try { renderStudentCourses(); } catch (e) {} }
-          if (activeId === 'overview' && typeof renderOverview === 'function') { try { renderOverview(); } catch (e) {} }
-          if (typeof refreshCoursesUI === 'function') { try { refreshCoursesUI(); } catch (e) {} }
+          console.log('[courses-live] 🔄 تحديث فوري من Firebase:', courses.length, 'كورس', fromServer ? '(من السيرفر)' : '(من الكاش)');
+          _refreshAllCoursesUI();
         }
       }, (err) => {
-        console.error('[courses-live] onSnapshot error:', err);
+        console.error('[courses-live] onSnapshot error:', err.code, err.message);
       });
   } catch (e) { console.error('[courses-init] listener setup failed', e); }
 
+  // ── 2. قراءة فورية (get) للحصول على البيانات الأولية قبل وصول أول snapshot ──
   try {
     const doc = await window.db.collection('platform_data').doc('courses_list').get();
     let fbCourses = [];
     if (doc.exists) {
       const data = doc.data() || {};
-      const rawFbCourses = Array.isArray(data.items) ? data.items : (Array.isArray(data.courses) ? data.courses : []);
-      fbCourses = getPublishedCoursePayload(rawFbCourses);
-      if (fbCourses.length !== rawFbCourses.length) {
-        await pushCoursesToFirebase(fbCourses);
-        console.log('[courses-init] Removed legacy seeded courses from Firebase');
+      const raw = Array.isArray(data.items) ? data.items
+                : Array.isArray(data.courses) ? data.courses : [];
+      fbCourses = getPublishedCoursePayload(raw)
+        .filter(c => c && c.id && !_legacySeedCourseTitles.has(c.title));
+
+      // إذا كان Firebase يحتوي على كورسات افتراضية → احذفها من Firebase نفسه
+      const rawFiltered = raw.filter(c => c && c.id && !_legacySeedCourseTitles.has(c.title));
+      if (rawFiltered.length !== raw.length) {
+        pushCoursesToFirebase(rawFiltered)
+          .then(() => console.log('[courses-init] 🗑️ تم حذف الكورسات الافتراضية من Firebase'))
+          .catch(e => console.warn('[courses-init] فشل حذف الكورسات الافتراضية من Firebase:', e.message));
       }
     }
 
-    if (fbCourses.length > 0) {
-      // Firebase له بيانات → استخدمها كمصدر موثوق
-      courses = fbCourses;
-      localStorage.setItem('alsaqr_courses', JSON.stringify(courses));
-      localStorage.setItem('alsaqr_courses_initialized', '1');
-      localStorage.setItem('alsaqr_courses_fb_migrated', '1');
-      console.log('[courses-init] Loaded', courses.length, 'courses from Firebase');
-    } else {
-      // Firebase مفيهوش كورسات (الدوكيومنت فاضي أو مش موجود).
-      // قبل ما نمسح أي حاجة، نتأكد إن مفيش كورسات حقيقية متخزنة محلياً بس ولسه ما اتزامنتش مع Firebase
-      // (ده بيحصل مثلاً لو الكورس اتحفظ في نسخة قديمة من الموقع قبل ما مزامنة Firebase تتضاف، أو لو رفع Firebase فشل بصمت قبل كده).
-      const localCourses = JSON.parse(localStorage.getItem('alsaqr_courses') || '[]')
-        .filter(c => !_legacySeedCourseTitles.has(c && c.title));
+    // Firebase هو المصدر الوحيد الموثوق — استخدم ما جاء منه حتى لو فارغ
+    // (فارغ = لا توجد كورسات حقيقية مضافة بعد)
+    courses = fbCourses;
+    localStorage.setItem('alsaqr_courses', JSON.stringify(courses));
+    localStorage.setItem('alsaqr_courses_initialized', '1');
+    localStorage.setItem('alsaqr_courses_fb_migrated', '1');
+    console.log('[courses-init] ✅ تم تحميل', courses.length, 'كورس من Firebase');
+
+    // ── ترقية: كورسات محلية حقيقية لم تُرفع بعد (ما قبل نظام Firebase) ──
+    if (fbCourses.length === 0) {
+      const localOnly = JSON.parse(localStorage.getItem('alsaqr_courses') || '[]')
+        .filter(c => c && c.id && !_legacySeedCourseTitles.has(c.title));
       const alreadyMigrated = localStorage.getItem('alsaqr_courses_fb_migrated') === '1';
-
-      if (localCourses.length > 0 && !alreadyMigrated) {
-        console.warn('[courses-init] Firebase فاضي لكن فيه', localCourses.length, 'كورس محفوظ محلياً بس — هنرفعهم على Firebase بدل ما نمسحهم.');
-        courses = localCourses;
-        const pushed = await pushCoursesToFirebase(localCourses);
+      // فقط إذا لم يسبق الترحيل وفيه كورسات محلية حقيقية
+      if (localOnly.length > 0 && !alreadyMigrated) {
+        console.warn('[courses-init] فيه', localOnly.length, 'كورس محلي حقيقي — جاري رفعه على Firebase...');
+        const pushed = await pushCoursesToFirebase(localOnly);
         if (pushed) {
+          courses = localOnly;
           localStorage.setItem('alsaqr_courses_fb_migrated', '1');
-          localStorage.setItem('alsaqr_courses', JSON.stringify(localCourses));
-          showNotification('⚠️ لقينا كورسات كانت محفوظة على الجهاز ده بس ولسه ما اتنشرتش على Firebase — تم رفعها ونشرها دلوقتي', 'warning');
-          console.log('[courses-init] Migrated', localCourses.length, 'local-only course(s) to Firebase');
-        } else {
-          showNotification('⚠️ في كورسات محفوظة على هذا الجهاز فقط ولسه معملهاش رفع لـ Firebase. اتأكد من الاتصال وجرّب تفتح صفحة الكورسات تاني.', 'warning');
-          console.warn('[courses-init] Failed to migrate local-only courses to Firebase — kept them in memory/local for now');
+          localStorage.setItem('alsaqr_courses', JSON.stringify(localOnly));
+          showNotification('⚠️ تم ترحيل كورسات من هذا الجهاز إلى Firebase ونشرها للطلاب', 'warning');
+          console.log('[courses-init] ✅ تم ترحيل', localOnly.length, 'كورس إلى Firebase');
         }
-      } else {
-        // مفيش كورسات محلية حقيقية للاسترجاع، فعلاً مفيش كورسات منشورة.
-        courses = [];
-        localStorage.removeItem('alsaqr_courses');
-        console.log('[courses-init] No published courses in Firebase and nothing real to migrate locally');
       }
     }
 
-    const activePage = document.querySelector('.page.active');
-    if (activePage) {
-      const id = activePage.id.replace('page-', '');
-      if (id === 'courses') renderCoursesAdmin();
-      if (id === 'student-courses') renderStudentCourses();
-      if (id === 'overview') renderOverview();
-    }
+    _refreshAllCoursesUI();
   } catch(e) {
     console.warn('[courses-init] Firebase load error:', e.code, e.message);
     const localCourses = JSON.parse(localStorage.getItem('alsaqr_courses') || '[]')
@@ -2691,12 +2741,16 @@ function watchStudentsCollection(dbInstance, srcNew, label) {
 }
 
 (async () => {
-  // ننتظر لحد ما الاتنين (القديم والجديد) يبقوا جاهزين
-  if (!window.db || !window.dbNew) {
+  // ننتظر window.db فقط (window.dbNew = window.db في هذه المنصة)
+  if (!window.db) {
     await new Promise(resolve => {
-      const t = setInterval(() => { if (window.db && window.dbNew) { clearInterval(t); resolve(); } }, 150);
-      setTimeout(() => { clearInterval(t); resolve(); }, 6000);
+      const t = setInterval(() => { if (window.db) { clearInterval(t); resolve(); } }, 150);
+      setTimeout(() => { clearInterval(t); resolve(); }, 8000);
     });
+  }
+  if (!window.db) {
+    console.warn('[students-live] Firebase not available — students will load from localStorage only');
+    return;
   }
   watchStudentsCollection(window.db, false, 'students');
 
@@ -3008,7 +3062,10 @@ function cloneCourseList(list){
 }
 
 function getPublishedCoursePayload(list){
-  return cloneCourseList(list).filter(course => !_legacySeedCourseTitles.has(course && course.title)).map(course => {
+  return cloneCourseList(list).filter(course =>
+    course && course.id &&
+    !_legacySeedCourseTitles.has(course.title)
+  ).map(course => {
     if (course && typeof course.thumbnail === 'string' && course.thumbnail.startsWith('data:image/') && course.thumbnail.length > 180000) {
       course.thumbnail = '';
       course.thumbnailWarning = 'تم حذف صورة غلاف كبيرة جداً قبل النشر';
@@ -3031,13 +3088,16 @@ function getJsonSizeBytes(value){
 
 async function saveCourses(c){
   _coursesDirty = true;
-  const cleanCourses = getPublishedCoursePayload(c);
+  // فلترة الكورسات الافتراضية قبل الحفظ
+  const cleanCourses = getPublishedCoursePayload(c)
+    .filter(course => course && course.id && !_legacySeedCourseTitles.has(course.title));
   const ok = await pushCoursesToFirebase(cleanCourses);
   if (ok) {
     courses = cleanCourses;
     localStorage.setItem('alsaqr_courses', JSON.stringify(cleanCourses));
     localStorage.setItem('alsaqr_courses_updated', Date.now().toString());
     localStorage.setItem('alsaqr_courses_initialized', '1');
+    localStorage.setItem('alsaqr_courses_fb_migrated', '1');
   }
   return ok;
 }
@@ -3234,7 +3294,12 @@ async function addLessonToCourse(courseId, lesson){
 
 async function initStudentsPage(){
   renderStudentsTable(); // عرض فوري من الكاش المحلي
-  await syncPlatformStudents(false); // جلب من Firebase في الخلفية
+  // جلب من Firebase في الخلفية (صامت بدون إشعار)
+  try {
+    await syncPlatformStudents(false);
+  } catch(e) {
+    console.warn('[initStudentsPage] sync error:', e.message);
+  }
 }
 async function updateLesson(courseId, lessonId, updates){
   const cs = getCourses();
@@ -3493,9 +3558,10 @@ async function replaceSegmentVideo(input, courseId, lessonId, segIndex){
 // ---- OVERVIEW ----
 function renderOverview(){
   const users=getUsers();
+  const realCourses = (Array.isArray(courses) ? courses : []).filter(c => c && c.id && !_legacySeedCourseTitles.has(c.title));
   document.getElementById('statTotal').textContent=users.length;
   document.getElementById('statActive').textContent=users.filter(u=>u.status==='active').length;
-  document.getElementById('statCourses').textContent=courses.length;
+  document.getElementById('statCourses').textContent=realCourses.length;
   document.getElementById('studentsBadge').textContent=users.length;
   const today=new Date().toLocaleDateString('ar-EG');
   document.getElementById('statToday').textContent=users.filter(u=>u.joinDate===today).length;
@@ -8601,7 +8667,27 @@ if(currentUser && currentUser.role === 'student') {
   })();
 }
 
-// ── ترحيل الطلاب من طناني إلى الدكتور ──
+// ── تحميل أولي عند فتح الداشبورد ──
+// يضمن أن البيانات الحقيقية تظهر في الـ overview بمجرد فتح الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+  // 1. عرض الـ overview مباشرةً بما هو في الذاكرة المحلية
+  if (typeof renderOverview === 'function') {
+    try { renderOverview(); } catch(e) {}
+  }
+
+  // 2. بعد ثانية (وقت كافٍ لـ Firebase يجهز) → تحديث الـ overview بالبيانات الحقيقية
+  setTimeout(async function() {
+    try {
+      // تحديث الطلاب من Firebase إذا لم يُشغَّل بعد
+      const users = typeof getUsers === 'function' ? getUsers() : [];
+      if (!users.length && window.db) {
+        await syncPlatformStudents(false);
+      }
+      // تحديث الـ overview بالبيانات الجديدة
+      if (typeof renderOverview === 'function') renderOverview();
+    } catch(e) { console.warn('[DOMContentLoaded] overview refresh error:', e.message); }
+  }, 1500);
+});
 </script>
 <!-- Mobile sidebar toggle -->
 <script>
