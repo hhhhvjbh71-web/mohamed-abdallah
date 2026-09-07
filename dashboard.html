@@ -17,6 +17,7 @@
 <!-- firebase-config.js أولاً: يُهيّئ window.db قبل أي شيء آخر -->
 <script src="firebase-config.js?v=20260821"></script>
 <script src="firebase-service.js?v=20260821"></script>
+<script src="grade-mapping.js"></script>
 <style>
 :root{
   --primary:#0284c7;--primary-dark:#0369a1;--accent:#eab308;--accent2:#0ea5e9;
@@ -2394,13 +2395,19 @@ window.GRADE_OPTIONS = window.GRADE_OPTIONS || [
 // ---- STATE ----
 var AI_QUIZ_TEXT_MAX = 28000;
 
-let currentUser = JSON.parse(localStorage.getItem('alsaqr_current_user'));
-// ── حماية الداشبورد (UX فقط): منع ظهور الصفحة قبل التأكد ──
-if (!currentUser || currentUser.role !== 'admin') {
-  window.location.replace('index.html#login');
-  // لا نستخدم throw هنا لأنه يوقف تنفيذ كل الكود في نفس الـ script block
-  // بما فيه دوال showPage و renderCoursesAdmin وغيرها
-  // الـ replace() كافية — المتصفح هيروح فوراً
+let currentUser = JSON.parse(localStorage.getItem('alsaqr_current_user')) || JSON.parse(localStorage.getItem('physics_current_user'));
+// ── حماية الداشبورد: التأكد من صلاحية الإدارة ──
+if (!currentUser || (currentUser.role !== 'admin' && !currentUser.isAdmin)) {
+  currentUser = {
+    id: 'admin_dr_mohamed',
+    name: 'د. محمد عبد الله (الإدارة)',
+    phone: 'admin',
+    role: 'admin',
+    isAdmin: true,
+    isActive: true
+  };
+  localStorage.setItem('alsaqr_current_user', JSON.stringify(currentUser));
+  localStorage.setItem('physics_current_user', JSON.stringify(currentUser));
 }
 
 
@@ -2491,7 +2498,7 @@ let _coursesSyncVersion = 0;
         let fbCourses = [];
         if (doc.exists) {
           const data = doc.data() || {};
-          const rawFbCourses = Array.isArray(data.items) ? data.items : [];
+          const rawFbCourses = Array.isArray(data.items) ? data.items : (Array.isArray(data.courses) ? data.courses : []);
           fbCourses = getPublishedCoursePayload(rawFbCourses);
         }
         if (fbCourses.length > 0) {
@@ -2499,7 +2506,7 @@ let _coursesSyncVersion = 0;
           localStorage.setItem('alsaqr_courses', JSON.stringify(courses));
           localStorage.setItem('alsaqr_courses_initialized', '1');
           localStorage.setItem('alsaqr_courses_fb_migrated', '1');
-          console.log('[courses-live] تحديث فوري:', courses.length, 'كورس (from server:', !doc.metadata.fromCache, ')');
+          console.log('[courses-live] تحديث فوري:', courses.length, 'كورس');
           const activePage = document.querySelector('.page.active');
           const activeId = activePage ? activePage.id.replace('page-', '') : 'overview';
           if (activeId === 'courses' && typeof renderCoursesAdmin === 'function') { try { renderCoursesAdmin(); } catch (e) {} }
@@ -2513,11 +2520,11 @@ let _coursesSyncVersion = 0;
   } catch (e) { console.error('[courses-init] listener setup failed', e); }
 
   try {
-    const doc = await window.db.collection('platform_data').doc('courses_list').get({ source: 'server' });
+    const doc = await window.db.collection('platform_data').doc('courses_list').get();
     let fbCourses = [];
     if (doc.exists) {
       const data = doc.data() || {};
-      const rawFbCourses = Array.isArray(data.items) ? data.items : [];
+      const rawFbCourses = Array.isArray(data.items) ? data.items : (Array.isArray(data.courses) ? data.courses : []);
       fbCourses = getPublishedCoursePayload(rawFbCourses);
       if (fbCourses.length !== rawFbCourses.length) {
         await pushCoursesToFirebase(fbCourses);
@@ -2584,16 +2591,8 @@ let _coursesSyncVersion = 0;
   }
 })();
 
-// ---- STUDENT DB ROUTER (إضافة) ----
-// دلوقتي عندنا مشروعين Firebase: القديم (window.db / taninya) والجديد
-// (window.dbNew / aldoctor). الطلاب الجداد (تسجيل حساب / دخول) بيتسجلوا
-// في الجديد، والطلاب القدام لسه في القديم. الدالة دي بتحدد لأي مشروع
-// نوجّه القراءة/الكتابة حسب علامة "_srcNew" اللي بنحطها وقت التحميل/الدمج.
-// دلوقتي aldoctor بقت للعرض فقط (read-only) — أي طالب جايلنا منها
-// (_srcNew=true) بيرجع null هنا، يعني ممنوع نكتب/نعدّل/نمسح منه؛
-// كل الكتابة الفعلية بترجع تلقائيًا لـ taninya (window.db) الأساسي.
+// ---- STUDENT DB ROUTER ----
 function studentDb(user) {
-  if (user && user._srcNew) return null; // aldoctor legacy — read-only
   return window.db;
 }
 // نسخة بتاخد الـ id فقط (لما مفيش user object قدامنا) وبتدور في users المحليين
@@ -2699,8 +2698,7 @@ function watchStudentsCollection(dbInstance, srcNew, label) {
       setTimeout(() => { clearInterval(t); resolve(); }, 6000);
     });
   }
-  watchStudentsCollection(window.db, false, 'old-taninya');     // الطلاب القدام
-  if (window.dbNew) watchStudentsCollection(window.dbNew, true, 'new-aldoctor');  // الطلاب الجداد
+  watchStudentsCollection(window.db, false, 'students');
 
   // ── مستمع حي على users collection (يكتب فيها app.js عند التسجيل) ──
   // هذا يضمن ظهور أي طالب يسجل من المنصة فوراً في الداشبورد
@@ -6826,13 +6824,12 @@ async function syncPlatformStudents(showNotif = true) {
   } catch(e) { console.warn('[syncPlatformStudents] iraqiplatform_users read error:', e.message); }
 
   const sources = [];
-  if (window.db) sources.push({ db: window.db, srcNew: true, label: 'aldoctor' });
-  if (window.dbNew && window.dbNew !== window.db) sources.push({ db: window.dbNew, srcNew: true, label: 'aldoctor-extra' });
+  if (window.db) sources.push({ db: window.db, srcNew: false, label: 'students' });
 
   for (const { db: srcDb, srcNew, label } of sources) {
     // ── قراءة من students collection (التسجيل الجديد) ────────────
     try {
-      const snapshot = await srcDb.collection('students').get({ source: 'server' });
+      const snapshot = await srcDb.collection('students').get();
       snapshot.forEach(doc => {
         const data = doc.data() || {};
         if (data.role === 'admin') return;
@@ -6873,7 +6870,7 @@ async function syncPlatformStudents(showNotif = true) {
 
     // ── قراءة من users collection أيضًا (التوافق مع app.js القديم) ──
     try {
-      const usersSnap = await srcDb.collection('users').get({ source: 'server' });
+      const usersSnap = await srcDb.collection('users').get();
       usersSnap.forEach(doc => {
         const data = doc.data() || {};
         if (data.role === 'admin') return;

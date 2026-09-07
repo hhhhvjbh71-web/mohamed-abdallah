@@ -399,16 +399,15 @@ function initPhysicsBackground() {
    ========================================================================== */
 function initCourseFilters() {
   const filterTabs = document.querySelectorAll('.filter-tab');
-  const courseCards = document.querySelectorAll('.course-card');
-
-  if (!filterTabs.length || !courseCards.length) return;
+  if (!filterTabs.length) return;
 
   filterTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
+    tab.onclick = () => {
       filterTabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
 
       const targetFilter = tab.getAttribute('data-filter');
+      const courseCards = document.querySelectorAll('.course-card');
 
       courseCards.forEach(card => {
         const cardGrade = card.getAttribute('data-grade');
@@ -419,7 +418,7 @@ function initCourseFilters() {
           card.style.display = 'none';
         }
       });
-    });
+    };
   });
 }
 
@@ -522,8 +521,10 @@ async function syncDynamicCourses(onDone) {
   try {
     if (window.db) {
       const doc = await window.db.collection('platform_data').doc('courses_list').get();
-      if (doc.exists && doc.data().items && Array.isArray(doc.data().items)) {
-        customCourses = doc.data().items;
+      if (doc.exists) {
+        const data = doc.data() || {};
+        const list = Array.isArray(data.items) ? data.items : (Array.isArray(data.courses) ? data.courses : []);
+        if (list.length > 0) customCourses = list;
       }
     }
   } catch(e) {
@@ -545,21 +546,21 @@ async function syncDynamicCourses(onDone) {
       '1': 'sec-1', 'sec1': 'sec-1', 'sec-1': 'sec-1',
       '2': 'sec-2', 'sec2': 'sec-2', 'sec-2': 'sec-2',
       '3': 'sec-3', 'sec3': 'sec-3', 'sec-3': 'sec-3',
-      'prep-1': 'prep-1', '1prep': 'prep-1',
-      'prep-2': 'prep-2', '2prep': 'prep-2',
-      'prep-3': 'prep-3', '3prep': 'prep-3'
+      'prep-1': 'prep-1', '1prep': 'prep-1', 'prep1': 'prep-1',
+      'prep-2': 'prep-2', '2prep': 'prep-2', 'prep2': 'prep-2',
+      'prep-3': 'prep-3', '3prep': 'prep-3', 'prep3': 'prep-3'
     };
 
     const gradeNameMap = {
-      '1': 'أولى ثانوي', 'sec-1': 'أولى ثانوي',
-      '2': 'تانية ثانوي', 'sec-2': 'تانية ثانوي',
-      '3': 'تالتة ثانوي', 'sec-3': 'تالتة ثانوي',
-      'prep-1': 'أولى إعدادي',
-      'prep-2': 'تانية إعدادي',
-      'prep-3': 'تالتة إعدادي'
+      '1': 'أولى ثانوي', 'sec-1': 'أولى ثانوي', 'sec1': 'أولى ثانوي',
+      '2': 'تانية ثانوي', 'sec-2': 'تانية ثانوي', 'sec2': 'تانية ثانوي',
+      '3': 'تالتة ثانوي', 'sec-3': 'تالتة ثانوي', 'sec3': 'تالتة ثانوي',
+      'prep-1': 'أولى إعدادي', '1prep': 'أولى إعدادي', 'prep1': 'أولى إعدادي',
+      'prep-2': 'تانية إعدادي', '2prep': 'تانية إعدادي', 'prep2': 'تانية إعدادي',
+      'prep-3': 'تالتة إعدادي', '3prep': 'تالتة إعدادي', 'prep3': 'تالتة إعدادي'
     };
 
-    // إفراغ الشبكة واستبدالها بالكورسات الحقيقية من الداشبورد
+    // تحديث شبكة الكورسات من Firebase
     grid.innerHTML = customCourses.map((c, i) => {
       const gradeClass = gradeClassMap[c.grade] || 'sec-3';
       const gradeName = gradeNameMap[c.grade] || c.grade || 'مرحلة ثانوية';
@@ -604,6 +605,7 @@ async function syncDynamicCourses(onDone) {
     }).join('');
 
     if (typeof onDone === 'function') onDone();
+    initCourseFilters();
   }
 }
 
