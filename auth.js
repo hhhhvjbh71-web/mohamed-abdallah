@@ -243,6 +243,48 @@ function initRegisterForm() {
       localStorage.setItem('physics_current_user', JSON.stringify(sessionUser));
       localStorage.setItem('physics_session_id', docRef.id);
 
+      // ✅ FIX: إضافة الطالب فوراً في alsaqr_users + physics_users حتى يظهر في الداشبورد
+      // الداشبورد يقرأ من alsaqr_users أولاً عبر getUsers()،
+      // وlو الطالب مش موجود فيها لا يظهر إلا بعد ما syncStudentsFromFirebase تشتغل
+      try {
+        const studentEntry = {
+          id:             docRef.id,
+          name:           nameTrimmed,
+          phone:          phoneVal,
+          parentPhone:    parentPhoneVal,
+          grade:          gradeSelect.value,
+          gov:            govSelect.value,
+          governorate:    govSelect.value,
+          role:           'student',
+          isActive:       true,
+          status:         'active',
+          studentType:    'outside',
+          enrolledCourses: [],
+          registeredAt:   new Date().toISOString(),
+          registeredAtISO: new Date().toISOString(),
+          joinDate:       new Date().toISOString().slice(0, 10)
+        };
+
+        // حفظ في alsaqr_users (المصدر الأول في getUsers بالداشبورد)
+        const alsaqrUsers = JSON.parse(localStorage.getItem('alsaqr_users') || '[]');
+        const alreadyInAlsaqr = alsaqrUsers.some(u => String(u.id) === docRef.id || String(u.phone) === phoneVal);
+        if (!alreadyInAlsaqr) {
+          alsaqrUsers.push(studentEntry);
+          localStorage.setItem('alsaqr_users', JSON.stringify(alsaqrUsers));
+        }
+
+        // حفظ في physics_users (مصدر ثانوي)
+        const physicsUsers = JSON.parse(localStorage.getItem('physics_users') || '[]');
+        const alreadyInPhysics = physicsUsers.some(u => String(u.id) === docRef.id || String(u.phone) === phoneVal);
+        if (!alreadyInPhysics) {
+          physicsUsers.push(studentEntry);
+          localStorage.setItem('physics_users', JSON.stringify(physicsUsers));
+        }
+      } catch (localErr) {
+        // فشل الحفظ المحلي لا يوقف عملية التسجيل
+        console.warn('⚠️ [auth] فشل حفظ الطالب في localStorage:', localErr);
+      }
+
       showToast(`🎉 مرحباً بك يا بطل الفيزياء! تم إنشاء حسابك بنجاح`, 'success');
 
       redirectAfterAuth();
