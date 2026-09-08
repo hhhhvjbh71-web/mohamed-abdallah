@@ -2740,6 +2740,66 @@ function watchStudentsCollection(dbInstance, srcNew, label) {
   }
 }
 
+// ── جلب كامل لطلاب Firebase عند بدء التشغيل (يحل مشكلة عدم ظهور الطلاب) ──
+// الـ onSnapshot يعمل بـ docChanges() فقط (تغييرات)، لذا لو localStorage فاضي
+// أو الداشبورد اتفتح من أول، الطلاب ما بيظهروش إلا بعد أول تغيير.
+// هذه الدالة تعمل get() كامل مرة واحدة عند التشغيل لتعبئة localStorage فوراً.
+async function syncStudentsFromFirebase() {
+  if (!window.db) return;
+  try {
+    const snap = await window.db.collection('students').get();
+    if (snap.empty) { console.log('[syncStudents] لا يوجد طلاب في Firebase'); return; }
+    const users = getUsers();
+    let addedCount = 0;
+
+    snap.forEach(doc => {
+      const data = doc.data() || {};
+      if (data.role === 'admin') return;
+
+      const id = String(data.id || data.phone || doc.id);
+      if (!id) return;
+
+      const incoming = {
+        ...data,
+        id,
+        qrCode: data.qrCode || id,
+        name: data.name || data.fullName || 'طالب',
+        grade: (typeof window.normalizeGrade === 'function') ? window.normalizeGrade(data.grade) : (data.grade || 'all'),
+        gov: data.gov || data.governorate || '',
+        phone: data.phone || '',
+        role: 'student',
+        status: data.status || 'active',
+        enrolledCourses: data.enrolledCourses || [],
+        studentType: data.studentType || 'outside',
+        joinDate: data.joinDate || (data.registeredAtISO ? data.registeredAtISO.slice(0,10) : (data.registeredAt ? '-' : '-')),
+      };
+
+      const idx = users.findIndex(u =>
+        String(u.id) === id ||
+        (incoming.phone && String(u.phone || '') === incoming.phone)
+      );
+
+      if (idx > -1) {
+        const allCourses = [...new Set([...(users[idx].enrolledCourses || []), ...(incoming.enrolledCourses || [])].map(String))];
+        users[idx] = { ...users[idx], ...incoming, enrolledCourses: allCourses };
+      } else {
+        users.push(incoming);
+        addedCount++;
+      }
+    });
+
+    saveUsers(users);
+    console.log(`[syncStudents] ✅ تم تحميل ${snap.size} طالب من Firebase (${addedCount} جديد)`);
+
+    if (typeof renderStudentsTable === 'function') renderStudentsTable();
+    if (typeof renderOverview === 'function') renderOverview();
+    const badge = document.getElementById('studentsBadge');
+    if (badge) badge.textContent = users.filter(u => u.role !== 'admin').length;
+  } catch (e) {
+    console.error('[syncStudents] فشل تحميل الطلاب من Firebase:', e);
+  }
+}
+
 (async () => {
   // ننتظر window.db فقط (window.dbNew = window.db في هذه المنصة)
   if (!window.db) {
@@ -2752,6 +2812,10 @@ function watchStudentsCollection(dbInstance, srcNew, label) {
     console.warn('[students-live] Firebase not available — students will load from localStorage only');
     return;
   }
+
+  // ← جلب كامل أولاً قبل تشغيل الـ listeners
+  await syncStudentsFromFirebase();
+
   watchStudentsCollection(window.db, false, 'students');
 
   // ── مستمع حي على users collection (يكتب فيها app.js عند التسجيل) ──
