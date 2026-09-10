@@ -889,6 +889,12 @@ body {
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 45px var(--color-primary-glow), 0 0 30px var(--color-secondary-glow);
 }
 
+/* لما تكون فيه صورة حقيقية: شيل الـ padding عشان الصورة تملأ الكارد بالكامل */
+.hero-card-frame:has(.teacher-photo-container.has-photo) {
+  padding: 0;
+  overflow: hidden;
+}
+
 .teacher-photo-container {
   width: 100%;
   height: 100%;
@@ -914,8 +920,31 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top center;
   border-radius: var(--radius-md);
   display: none;
+  transition: transform 0.4s ease;
+}
+
+/* لما يكون فيه صورة حقيقية: اظهر الصورة واخفي الـ placeholder وشيل الـ padding */
+.teacher-photo-container.has-photo {
+  padding: 0;
+  background: none;
+  border: none;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.teacher-photo-container.has-photo .teacher-photo-img {
+  display: block;
+}
+
+.teacher-photo-container.has-photo .teacher-placeholder-box {
+  display: none;
+}
+
+.hero-card-frame:hover .teacher-photo-img {
+  transform: scale(1.03);
 }
 
 .teacher-placeholder-box {
@@ -1903,7 +1932,9 @@ section,
 
   .hero-grid {
     grid-template-columns: 1fr;
-    gap: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
     text-align: center;
   }
 
@@ -1917,9 +1948,17 @@ section,
     gap: 12px;
   }
 
-  /* إخفاء إطار الصورة في البانر على الموبايل — يأخذ مساحة بدون فائدة */
+  /* إظهار صورة المدرس الاحترافية على الموبايل بحجم مناسب */
   .hero-image-wrapper {
-    display: none;
+    display: flex;
+    justify-content: center;
+    order: -1; /* الصورة تيجي فوق النص على الموبايل */
+  }
+
+  .hero-card-frame {
+    max-width: 260px;
+    aspect-ratio: 3 / 4;
+    margin: 0 auto;
   }
 }
 
