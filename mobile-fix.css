@@ -1191,4 +1191,99 @@ section,
   }
 }
 
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ١٩. صورة الكورس — عرض كامل بدون فراغات جانبية                       │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+/* لما تكون في الـ banner صورة، تملأ المربع بالكامل */
+.course-banner > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0;
+  display: block;
+}
+
+/* تأكيد إن الـ banner عنده position:relative */
+.course-banner {
+  position: relative;
+}
+
+/* على الموبايل: ارتفاع أقل + صورة كاملة */
+@media (max-width: 480px) {
+  .course-banner {
+    height: 160px;
+  }
+
+  .course-banner > img {
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* ┌──────────────────────────────────────────────────────────────────────────┐
+   │  ٢٠. تحسينات موبايل إضافية — ضغطات وعرض عام                          │
+   └──────────────────────────────────────────────────────────────────────────┘ */
+
+@media (max-width: 480px) {
+  /* منع أي overflow أفقي */
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* فلاتر الكورسات تلف بشكل صحيح */
+  .courses-filter-tabs {
+    padding-bottom: 4px;
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .courses-filter-tabs::-webkit-scrollbar { display: none; }
+
+  .filter-tab {
+    flex-shrink: 0;
+  }
+
+  /* شبكة الكورسات — عمود واحد على الموبايل */
+  .courses-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* البانر نسبة ثابتة */
+  .course-banner {
+    height: 0 !important;
+    padding-bottom: 52% !important; /* نسبة 52% تعطي شكل مستطيل مناسب */
+    overflow: hidden;
+  }
+
+  /* الصورة داخل النسبة */
+  .course-banner > img,
+  .course-banner > .course-physics-icon {
+    position: absolute;
+    inset: 0;
+  }
+
+  .course-banner > .course-physics-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* بادج الصف والسعر تبقى ظاهرة */
+  .course-grade-badge,
+  .course-price-badge {
+    z-index: 2;
+  }
+}
+
 /* نهاية ملف التجاوب الاحترافي للهاتف */

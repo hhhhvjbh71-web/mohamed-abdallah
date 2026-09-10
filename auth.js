@@ -225,11 +225,15 @@ function initRegisterForm() {
         name:          nameTrimmed,
         phone:         phoneVal,
         parentPhone:   parentPhoneVal,
+        fatherPhone:   parentPhoneVal,
         grade:         gradeSelect.value,
         governorate:   govSelect.value,
+        gov:           govSelect.value,
         password:      passwordVal,
         role:          'student',
         isActive:      true,
+        status:        'active',
+        studentType:   'outside',
         enrolledCourses: [],
         registeredAt:  firebase.firestore.FieldValue.serverTimestamp(),
         registeredAtISO: new Date().toISOString()
@@ -243,15 +247,14 @@ function initRegisterForm() {
       localStorage.setItem('physics_current_user', JSON.stringify(sessionUser));
       localStorage.setItem('physics_session_id', docRef.id);
 
-      // ✅ FIX: إضافة الطالب فوراً في alsaqr_users + physics_users حتى يظهر في الداشبورد
-      // الداشبورد يقرأ من alsaqr_users أولاً عبر getUsers()،
-      // وlو الطالب مش موجود فيها لا يظهر إلا بعد ما syncStudentsFromFirebase تشتغل
+      // إضافة الطالب فوراً في alsaqr_users + physics_users حتى يظهر في الداشبورد
       try {
         const studentEntry = {
           id:             docRef.id,
           name:           nameTrimmed,
           phone:          phoneVal,
           parentPhone:    parentPhoneVal,
+          fatherPhone:    parentPhoneVal,
           grade:          gradeSelect.value,
           gov:            govSelect.value,
           governorate:    govSelect.value,

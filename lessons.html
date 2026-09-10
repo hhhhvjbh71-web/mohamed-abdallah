@@ -1273,86 +1273,6 @@
     ============================================================ */
     const DEFAULT_COURSES = [
       {
-        id: 'prep1',
-        title: 'أساسيات المادة والطاقة والحركة (أولى إعدادي)',
-        grade: 'prep-1',
-        type: 'free',
-        price: 0,
-        thumbnail: '',
-        lessons: [
-          {
-            id: 'l_prep1_1',
-            title: 'الدرس الأول: المادة وخواصها والتركيب الذري',
-            position: 0,
-            segments: [
-              { id: 's1', title: 'مفهوم المادة وحالاتها وحساب الكثافة', videoUrl: 'https://www.youtube.com/watch?v=k3rRrl9J2F4', duration: '18 دقيقة', position: 0 },
-              { id: 's2', title: 'مسائل تدريبية على الكتلة والحجم والكثافة', videoUrl: 'https://www.youtube.com/watch?v=SimPy4Lq9Qk', duration: '22 دقيقة', position: 1 }
-            ],
-            pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-            pdfName: 'ملخص الدرس الأول - خواص المادة.pdf'
-          },
-          {
-            id: 'l_prep1_2',
-            title: 'الدرس الثاني: الطاقة ومصادرها وصورها وتحولاتها',
-            position: 1,
-            segments: [
-              { id: 's3', title: 'طاقة الوضع وطاقة الحركة والطاقة الميكانيكية', videoUrl: 'https://www.youtube.com/watch?v=7K4V0NvUxRg', duration: '25 دقيقة', position: 0 }
-            ],
-            pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-            pdfName: 'ملزمة الطاقة والميكانيكا.pdf'
-          }
-        ]
-      },
-      {
-        id: 'prep2',
-        title: 'الحركة الدورية والموجات والضوء (تانية إعدادي)',
-        grade: 'prep-2',
-        type: 'paid',
-        price: 100,
-        lessons: [
-          {
-            id: 'l_prep2_1',
-            title: 'الدرس الأول: الحركة الاهتزازية والتردد وسعة الاهتزازة',
-            position: 0,
-            segments: [
-              { id: 's4', title: 'شرح الحركة التوافقية البسيطة والزمن الدوري', videoUrl: 'https://www.youtube.com/watch?v=k3rRrl9J2F4', duration: '26 دقيقة', position: 0 }
-            ],
-            pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-            pdfName: 'ملزمة الحركة الاهتزازية وقوانينها.pdf'
-          },
-          {
-            id: 'l_prep2_2',
-            title: 'الدرس الثاني: الحركة الموجية وخصائص الموجات الصوتية',
-            position: 1,
-            segments: [
-              { id: 's5', title: 'أنواع الموجات الطولية والمستعرضة وسرعة انتشار الموجة', videoUrl: 'https://www.youtube.com/watch?v=SimPy4Lq9Qk', duration: '30 دقيقة', position: 0 }
-            ],
-            pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-            pdfName: 'ملخص الموجات وسرعة الصوت.pdf'
-          }
-        ]
-      },
-      {
-        id: 'prep3',
-        title: 'السرعة المتجهة والفيزياء الكونية والكهربية (تالتة إعدادي)',
-        grade: 'prep-3',
-        type: 'paid',
-        price: 120,
-        lessons: [
-          {
-            id: 'l_prep3_1',
-            title: 'الدرس الأول: الحركة في اتجاه واحد ومفهوم السرعة المنتظمة',
-            position: 0,
-            segments: [
-              { id: 's6', title: 'السرعة القياسية والسرعة المتجهة والنسبية', videoUrl: 'https://www.youtube.com/watch?v=7K4V0NvUxRg', duration: '28 دقيقة', position: 0 },
-              { id: 's7', title: 'حل مسائل السرعة المتوسطة والتمثيل البياني', videoUrl: 'https://www.youtube.com/watch?v=k3rRrl9J2F4', duration: '22 دقيقة', position: 1 }
-            ],
-            pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-            pdfName: 'ملزمة الشهادة الإعدادية - السرعة والعجلة.pdf'
-          }
-        ]
-      },
-      {
         id: 'sec1',
         title: 'الميكانيكا وقوانين الحركة وقوة نيوتن (أولى ثانوي)',
         grade: 'sec-1',
@@ -1568,7 +1488,7 @@
       if (!listEl) return;
       const lessons = sortedLessons();
       if (!lessons || !lessons.length) {
-        listEl.innerHTML = '<p style="color:var(--text3); font-size:13px; text-align:center; padding:12px;">جاري إعداد محتوى هذا الكورس...</p>';
+        listEl.innerHTML = '<p style="color:var(--text3); font-size:13px; text-align:center; padding:12px;">جاري تجهيز محتوى هذا الكورس...</p>';
         return;
       }
 
@@ -1810,9 +1730,6 @@
         '1': 'الصف الأول الثانوي',
         '2': 'الصف الثاني الثانوي',
         '3': 'الصف الثالث الثانوي',
-        'prep-1': 'الصف الأول الإعدادي',
-        'prep-2': 'الصف الثاني الإعدادي',
-        'prep-3': 'الصف الثالث الإعدادي',
         'all': 'جميع الصفوف'
       };
 
@@ -2080,6 +1997,57 @@
         f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
         f.title = item.title;
         wrap.appendChild(f);
+
+        // ── طبقة حماية YouTube ──────────────────────────────────────────
+        // تمنع الطلاب من الضغط على لوجو/بروفايل/اقتراحات يوتيوب
+        if (src.includes('youtube.com/embed')) {
+          const shield = document.createElement('div');
+          shield.id = 'yt-shield';
+          shield.style.cssText = [
+            'position:absolute',
+            'inset:0',
+            'z-index:10',
+            'background:transparent',
+            'pointer-events:none', // يسمح بالتشغيل / الإيقاف من منتصف الفيديو
+          ].join(';');
+
+          // مناطق الحجب الفعلية (corners & top bar where logo/profile sit)
+          const blockedZones = [
+            // شريط أعلى اليوتيوب (لوجو + بروفايل)
+            { top:'0',    left:'0',   width:'100%', height:'13%' },
+            // زاوية أسفل يمين (اقتراحات / playlist)
+            { bottom:'0', right:'0',  width:'35%',  height:'18%' },
+            // زاوية أسفل يسار (اسم القناة)
+            { bottom:'0', left:'0',   width:'30%',  height:'10%' },
+          ];
+
+          blockedZones.forEach(z => {
+            const zone = document.createElement('div');
+            zone.style.cssText = [
+              'position:absolute',
+              `top:${z.top||'auto'}`,
+              `bottom:${z.bottom||'auto'}`,
+              `left:${z.left||'auto'}`,
+              `right:${z.right||'auto'}`,
+              `width:${z.width}`,
+              `height:${z.height}`,
+              'pointer-events:all',
+              'cursor:not-allowed',
+              'background:transparent',
+              'z-index:11',
+            ].join(';');
+            // منع أي نقر يصل لليوتيوب في هذه المناطق
+            zone.addEventListener('click', e => e.stopPropagation());
+            zone.addEventListener('mousedown', e => e.stopPropagation());
+            zone.addEventListener('touchstart', e => e.stopPropagation(), { passive: false });
+            shield.appendChild(zone);
+          });
+
+          // لازم يكون الـ wrap relative عشان الـ absolute تشتغل
+          wrap.style.position = 'relative';
+          wrap.appendChild(shield);
+        }
+        // ─────────────────────────────────────────────────────────────────
       }
     }
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>دكتور محمد عبد الله - عميد الفيزياء | المنصة التعليمية الأولى</title>
-  <meta name="description" content="منصة دكتور محمد عبد الله - عميد الفيزياء لتعليم وشرح مادة الفيزياء للمرحلتين الإعدادية والثانوية بأحدث الأساليب العلمية.">
+  <meta name="description" content="منصة دكتور محمد عبد الله - عميد الفيزياء لتعليم وشرح مادة الفيزياء للمرحلة الثانوية بأحدث الأساليب العلمية.">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><circle cx='12' cy='12' r='3'/><path d='M20.2 20.2c2.4-2.4 2.4-6.3 0-8.7L13 4.3a1.5 1.5 0 0 0-2.1 0L3.8 11.5c-2.4 2.4-2.4 6.3 0 8.7 2.4 2.4 6.3 2.4 8.7 0l7.7-7.7'/></svg>">
 </head>
@@ -222,9 +222,6 @@
       <!-- تبويبات التصفية حسب الصفوف الدراسية -->
       <div class="courses-filter-tabs">
         <button type="button" class="filter-tab active" data-filter="all">جميع الكورسات</button>
-        <button type="button" class="filter-tab" data-filter="prep-1">الصف الأول الإعدادي</button>
-        <button type="button" class="filter-tab" data-filter="prep-2">الصف الثاني الإعدادي</button>
-        <button type="button" class="filter-tab" data-filter="prep-3">الصف الثالث الإعدادي</button>
         <button type="button" class="filter-tab" data-filter="sec-1">الصف الأول الثانوي</button>
         <button type="button" class="filter-tab" data-filter="sec-2">الصف الثاني الثانوي</button>
         <button type="button" class="filter-tab" data-filter="sec-3">الصف الثالث الثانوي</button>
@@ -232,92 +229,6 @@
 
       <!-- شبكة بطاقات الكورسات -->
       <div class="courses-grid" id="coursesGrid">
-
-        <!-- كورس 1: الصف الأول الإعدادي -->
-        <article class="course-card" data-grade="prep-1" id="course-prep1">
-          <div class="course-banner">
-            <div class="course-banner-pattern"></div>
-            <div class="course-physics-icon">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                <path d="M2 12h20"></path>
-              </svg>
-            </div>
-            <span class="course-grade-badge">أولى إعدادي</span>
-            <span class="course-price-badge">اشتراك شهري</span>
-          </div>
-          <div class="course-body">
-            <div class="course-meta">
-              <span class="course-meta-item">📚 24 حصة</span>
-              <span class="course-meta-item">⏱️ 36 ساعة</span>
-              <span class="course-meta-item">⭐ 4.9 (1.2k)</span>
-            </div>
-            <h3 class="course-title">أساسيات المادة والطاقة والحركة</h3>
-            <p class="course-desc">شرح تفصيلي مبسط لأسس الفيزياء والعلوم، مع حل تدريبات شاملة واختبارات إلكترونية تفاعلية أسبوعياً.</p>
-            <div class="course-footer">
-              <button type="button" class="btn btn-primary btn-course-enroll" data-course-id="prep1" data-course-title="أساسيات المادة والطاقة (أولى إعدادي)" style="width: 100%;">
-                اشترك الآن في الكورس
-              </button>
-            </div>
-          </div>
-        </article>
-
-        <!-- كورس 2: الصف الثاني الإعدادي -->
-        <article class="course-card" data-grade="prep-2" id="course-prep2">
-          <div class="course-banner">
-            <div class="course-banner-pattern"></div>
-            <div class="course-physics-icon">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M2 12h5l3-9 4 18 3-9h5"></path>
-              </svg>
-            </div>
-            <span class="course-grade-badge">تانية إعدادي</span>
-            <span class="course-price-badge">اشتراك شهري</span>
-          </div>
-          <div class="course-body">
-            <div class="course-meta">
-              <span class="course-meta-item">📚 28 حصة</span>
-              <span class="course-meta-item">⏱️ 42 ساعة</span>
-              <span class="course-meta-item">⭐ 5.0 (980)</span>
-            </div>
-            <h3 class="course-title">الحركة الدورية والموجات والضوء</h3>
-            <p class="course-desc">شرح قوانين الحركة الاهتزازية، طبيعة الموجات الصوتية والضوئية مع تجارب محاكاة بصرية تثري الفهم وتضمن الدرجة النهائية.</p>
-            <div class="course-footer">
-              <button type="button" class="btn btn-primary btn-course-enroll" data-course-id="prep2" data-course-title="الحركة الدورية والموجات والضوء (تانية إعدادي)" style="width: 100%;">
-                اشترك الآن في الكورس
-              </button>
-            </div>
-          </div>
-        </article>
-
-        <!-- كورس 3: الصف الثالث الإعدادي -->
-        <article class="course-card" data-grade="prep-3" id="course-prep3">
-          <div class="course-banner">
-            <div class="course-banner-pattern"></div>
-            <div class="course-physics-icon">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-              </svg>
-            </div>
-            <span class="course-grade-badge">تالتة إعدادي</span>
-            <span class="course-price-badge">اشتراك شهري</span>
-          </div>
-          <div class="course-body">
-            <div class="course-meta">
-              <span class="course-meta-item">📚 32 حصة</span>
-              <span class="course-meta-item">⏱️ 48 ساعة</span>
-              <span class="course-meta-item">⭐ 4.9 (2.1k)</span>
-            </div>
-            <h3 class="course-title">السرعة المتجهة والفيزياء الكونية والكهربية</h3>
-            <p class="course-desc">كورس الشهادة الإعدادية المتكامل: السرعة والعجلة والكميات الفيزيائية والمرايا والعدسات وبنوك أسئلة المحافظات السابقة.</p>
-            <div class="course-footer">
-              <button type="button" class="btn btn-primary btn-course-enroll" data-course-id="prep3" data-course-title="منهج الشهادة الإعدادية المتكامل" style="width: 100%;">
-                اشترك الآن في الكورس
-              </button>
-            </div>
-          </div>
-        </article>
 
         <!-- كورس 4: الصف الأول الثانوي -->
         <article class="course-card" data-grade="sec-1" id="course-sec1">
@@ -459,7 +370,7 @@
             دكتور محمد عبد الله
           </h2>
           <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.7; margin-bottom: 20px;">
-            مدرس ومحاضر مادة الفيزياء للمراحل الإعدادية والثانوية، صاحب خبرة رائدة في تبسيط المفاهيم الفيزيائية المعقدة وربط القوانين النظرية بالتطبيقات الحياتية والمحاكاة التفاعلية، لتمكين الطالب من حل أي مسألة مهما كانت درجة صعوبتها بكل ثقة واقتدار.
+            مدرس ومحاضر مادة الفيزياء للمرحلة الثانوية، صاحب خبرة رائدة في تبسيط المفاهيم الفيزيائية المعقدة وربط القوانين النظرية بالتطبيقات الحياتية والمحاكاة التفاعلية، لتمكين الطالب من حل أي مسألة مهما كانت درجة صعوبتها بكل ثقة واقتدار.
           </p>
 
           <div class="about-highlights">
@@ -514,7 +425,7 @@
             </div>
           </a>
           <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
-            المنصة التعليمية الشاملة لمادة الفيزياء لكافة الصفوف الإعدادية والثانوية في جمهورية مصر العربية.
+            المنصة التعليمية الشاملة لمادة الفيزياء لصفوف المرحلة الثانوية في جمهورية مصر العربية.
           </p>
           <div class="footer-social-links">
             <!-- واتساب -->
@@ -562,8 +473,6 @@
         <div class="footer-col">
           <h4 class="footer-title">الصفوف الدراسية</h4>
           <ul class="footer-links">
-            <li><a href="#courses" class="footer-link">الصف الأول والثاني الإعدادي</a></li>
-            <li><a href="#courses" class="footer-link">الصف الثالث الإعدادي (الشهادة)</a></li>
             <li><a href="#courses" class="footer-link">الصف الأول الثانوي</a></li>
             <li><a href="#courses" class="footer-link">الصف الثاني الثانوي</a></li>
             <li><a href="#courses" class="footer-link">الصف الثالث الثانوي (العامة والأزهر)</a></li>

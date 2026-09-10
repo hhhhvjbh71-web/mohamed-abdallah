@@ -545,19 +545,13 @@ async function syncDynamicCourses(onDone) {
     const gradeClassMap = {
       '1': 'sec-1', 'sec1': 'sec-1', 'sec-1': 'sec-1',
       '2': 'sec-2', 'sec2': 'sec-2', 'sec-2': 'sec-2',
-      '3': 'sec-3', 'sec3': 'sec-3', 'sec-3': 'sec-3',
-      'prep-1': 'prep-1', '1prep': 'prep-1', 'prep1': 'prep-1',
-      'prep-2': 'prep-2', '2prep': 'prep-2', 'prep2': 'prep-2',
-      'prep-3': 'prep-3', '3prep': 'prep-3', 'prep3': 'prep-3'
+      '3': 'sec-3', 'sec3': 'sec-3', 'sec-3': 'sec-3'
     };
 
     const gradeNameMap = {
       '1': 'أولى ثانوي', 'sec-1': 'أولى ثانوي', 'sec1': 'أولى ثانوي',
       '2': 'تانية ثانوي', 'sec-2': 'تانية ثانوي', 'sec2': 'تانية ثانوي',
-      '3': 'تالتة ثانوي', 'sec-3': 'تالتة ثانوي', 'sec3': 'تالتة ثانوي',
-      'prep-1': 'أولى إعدادي', '1prep': 'أولى إعدادي', 'prep1': 'أولى إعدادي',
-      'prep-2': 'تانية إعدادي', '2prep': 'تانية إعدادي', 'prep2': 'تانية إعدادي',
-      'prep-3': 'تالتة إعدادي', '3prep': 'تالتة إعدادي', 'prep3': 'تالتة إعدادي'
+      '3': 'تالتة ثانوي', 'sec-3': 'تالتة ثانوي', 'sec3': 'تالتة ثانوي'
     };
 
     // تحديث شبكة الكورسات من Firebase
@@ -566,21 +560,22 @@ async function syncDynamicCourses(onDone) {
       const gradeName = gradeNameMap[c.grade] || c.grade || 'مرحلة ثانوية';
       const isFree = c.type === 'free';
       const lessonsCount = (c.lessons && c.lessons.length) || 0;
-      const thumb = c.thumbnail ? `<img src="${c.thumbnail}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;">` : `
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-          <path d="M2 12h20"></path>
-        </svg>
+      const hasThumb = !!c.thumbnail;
+      const thumb = hasThumb ? `<img src="${c.thumbnail}" alt="${c.title}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:0;">` : `
+        <div class="course-physics-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+            <path d="M2 12h20"></path>
+          </svg>
+        </div>
       `;
 
       return `
         <article class="course-card" data-grade="${gradeClass}" id="course-${c.id}" style="animation: zoomIn 0.35s ease;">
           <div class="course-banner">
-            <div class="course-banner-pattern"></div>
-            <div class="course-physics-icon">
-              ${thumb}
-            </div>
+            ${hasThumb ? '' : '<div class="course-banner-pattern"></div>'}
+            ${thumb}
             <span class="course-grade-badge">${gradeName}</span>
             <span class="course-price-badge" style="background:${isFree ? 'rgba(16, 185, 129, 0.25)' : 'rgba(245, 158, 11, 0.25)'}; color:${isFree ? '#34d399' : '#fbbf24'}; border-color:${isFree ? '#059669' : '#d97706'}">
               ${isFree ? '🆓 مجاني' : `🔒 ${c.price ? c.price + ' ج.م' : 'اشتراك شهري'}`}
