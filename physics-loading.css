@@ -1,0 +1,257 @@
+/* ============================================================
+   Physics Loading Screen — دكتور محمد عبد الله (عميد الفيزياء)
+   ============================================================ */
+
+#physics-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: #020817;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+}
+
+#physics-loader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ── Star-field background ── */
+#physics-loader .starfield {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ── Canvas for particle/field animation ── */
+#loader-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Scene wrapper ── */
+.loader-scene {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+/* ── Central magnet SVG ── */
+.loader-magnet {
+  position: relative;
+  width: clamp(140px, 22vw, 200px);
+  height: clamp(140px, 22vw, 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-magnet svg.magnet-body {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 18px rgba(56,189,248,0.6))
+          drop-shadow(0 0 40px rgba(56,189,248,0.3));
+  animation: magnet-breathe 2s ease-in-out infinite;
+}
+
+@keyframes magnet-breathe {
+  0%, 100% { filter: drop-shadow(0 0 14px rgba(56,189,248,0.5)) drop-shadow(0 0 35px rgba(56,189,248,0.25)); }
+  50%       { filter: drop-shadow(0 0 28px rgba(56,189,248,0.9)) drop-shadow(0 0 60px rgba(56,189,248,0.5)) drop-shadow(0 0 90px rgba(251,191,36,0.25)); }
+}
+
+/* Spark bolt in center of magnet */
+.loader-spark-bolt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -62%);
+  animation: bolt-pulse 1.2s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes bolt-pulse {
+  0%, 100% { opacity: 0.7; transform: translate(-50%,-62%) scale(0.9); filter: drop-shadow(0 0 6px #fbbf24); }
+  50%       { opacity: 1;   transform: translate(-50%,-62%) scale(1.15); filter: drop-shadow(0 0 14px #fbbf24) drop-shadow(0 0 28px #f59e0b); }
+}
+
+/* ── Orbit rings ── */
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  animation: ring-spin linear infinite;
+  top: 50%;
+  left: 50%;
+}
+
+.orbit-ring-1 {
+  width: clamp(180px,28vw,260px);
+  height: clamp(180px,28vw,260px);
+  margin-top: calc(clamp(180px,28vw,260px) / -2);
+  margin-left: calc(clamp(180px,28vw,260px) / -2);
+  border-color: rgba(56,189,248,0.35);
+  border-top-color: #38bdf8;
+  animation-duration: 3.5s;
+}
+.orbit-ring-2 {
+  width: clamp(230px,36vw,330px);
+  height: clamp(230px,36vw,330px);
+  margin-top: calc(clamp(230px,36vw,330px) / -2);
+  margin-left: calc(clamp(230px,36vw,330px) / -2);
+  border-color: rgba(14,165,233,0.2);
+  border-right-color: #0ea5e9;
+  animation-duration: 5s;
+  animation-direction: reverse;
+}
+.orbit-ring-3 {
+  width: clamp(290px,46vw,420px);
+  height: clamp(290px,46vw,420px);
+  margin-top: calc(clamp(290px,46vw,420px) / -2);
+  margin-left: calc(clamp(290px,46vw,420px) / -2);
+  border-color: rgba(251,191,36,0.12);
+  border-bottom-color: rgba(251,191,36,0.55);
+  animation-duration: 7s;
+}
+
+@keyframes ring-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Orbiting dots ── */
+.orbit-dot {
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0 0;
+}
+
+/* ── Field lines (SVG overlay) ── */
+.field-lines-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(340px,54vw,490px);
+  height: clamp(340px,54vw,490px);
+  margin-top: calc(clamp(340px,54vw,490px) / -2);
+  margin-left: calc(clamp(340px,54vw,490px) / -2);
+  animation: ring-spin 8s linear infinite;
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+.field-lines-svg.visible { opacity: 1; }
+
+/* ── Energy pulses ── */
+.energy-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 2px solid rgba(56,189,248,0.6);
+  transform: translate(-50%,-50%) scale(0);
+  animation: pulse-expand 2.4s ease-out infinite;
+  pointer-events: none;
+}
+.energy-pulse:nth-child(2) { animation-delay: 0.8s; border-color: rgba(14,165,233,0.45); }
+.energy-pulse:nth-child(3) { animation-delay: 1.6s; border-color: rgba(251,191,36,0.3); }
+
+@keyframes pulse-expand {
+  0%   { transform: translate(-50%,-50%) scale(0.3); opacity: 0.9; }
+  100% { transform: translate(-50%,-50%) scale(2.5); opacity: 0; }
+}
+
+/* ── Sparks ── */
+.spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8, 0 0 16px #38bdf8;
+  pointer-events: none;
+}
+
+/* ── Text block ── */
+.loader-text-block {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  margin-top: clamp(24px, 5vw, 40px);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.loader-text-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.loader-name {
+  font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+  font-size: clamp(1.35rem, 4vw, 2rem);
+  font-weight: 800;
+  color: #f0f9ff;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 20px rgba(56,189,248,0.6), 0 0 40px rgba(56,189,248,0.3);
+  line-height: 1.2;
+}
+
+.loader-title {
+  font-size: clamp(1rem, 2.8vw, 1.4rem);
+  font-weight: 700;
+  color: #38bdf8;
+  margin-top: 4px;
+  text-shadow: 0 0 14px rgba(56,189,248,0.8), 0 0 28px rgba(56,189,248,0.4);
+  letter-spacing: 0.04em;
+}
+
+.loader-sub {
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  color: #64748b;
+  margin-top: 10px;
+  letter-spacing: 0.06em;
+  animation: sub-blink 1.5s ease-in-out infinite;
+}
+
+@keyframes sub-blink {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; color: #94a3b8; }
+}
+
+/* ── Progress bar ── */
+.loader-progress-wrap {
+  position: relative;
+  z-index: 3;
+  width: clamp(180px, 40vw, 280px);
+  height: 3px;
+  background: rgba(56,189,248,0.12);
+  border-radius: 99px;
+  margin-top: clamp(16px, 3vw, 24px);
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.5s 0.5s;
+}
+.loader-progress-wrap.visible { opacity: 1; }
+
+.loader-progress-bar {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8, #fbbf24);
+  box-shadow: 0 0 10px #38bdf8;
+  width: 0%;
+  transition: width 0.1s linear;
+}
