@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>دكتور محمد عبد الله - عميد الفيزياء | المنصة التعليمية الأولى</title>
   <meta name="description" content="منصة دكتور محمد عبد الله - عميد الفيزياء لتعليم وشرح مادة الفيزياء للمرحلة الثانوية بأحدث الأساليب العلمية.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="physics-loading.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><circle cx='12' cy='12' r='3'/><path d='M20.2 20.2c2.4-2.4 2.4-6.3 0-8.7L13 4.3a1.5 1.5 0 0 0-2.1 0L3.8 11.5c-2.4 2.4-2.4 6.3 0 8.7 2.4 2.4 6.3 2.4 8.7 0l7.7-7.7'/></svg>">
@@ -65,24 +68,28 @@
         <!-- إجراءات الهيدر (تبديل الثيم + تسجيل الدخول وإنشاء الحساب + زر الموبايل) -->
         <div class="nav-actions">
           
-          <!-- زر التبديل بين الوضع الليلي والنهاري -->
-          <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="تبديل الوضع الليلي والنهاري" title="تبديل الثيم">
-            <!-- أيقونة الشمس للوضع الليلي -->
-            <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-            <!-- أيقونة القمر للوضع النهاري -->
-            <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
+          <!-- سويتش تبديل الوضع الليلي / النهاري -->
+          <button type="button" class="theme-switch" id="themeToggleBtn" aria-label="تبديل الوضع الليلي والنهاري" title="تبديل الثيم">
+            <span class="theme-switch-track">
+              <span class="theme-switch-thumb">
+                <!-- أيقونة الشمس -->
+                <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <!-- أيقونة القمر -->
+                <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              </span>
+            </span>
           </button>
 
           <!-- أزرار الدخول والتسجيل للشاشات الكبيرة -->
@@ -128,60 +135,55 @@
   </aside>
 
   <!-- ==========================================================================
-       البانر الرئيسي (Hero Section)
+       البانر الرئيسي (Hero Section) - الترتيب الجديد: العنوان ثم الصورة ثم الأزرار
        ========================================================================== -->
-  <section class="hero-section" id="home">
+  <section class="hero-section hero-section-vertical" id="home">
     <div class="container">
-      <div class="hero-grid">
-        
-        <!-- المحتوى النصي للبانر -->
-        <div class="hero-content">
-          <!-- شارة المغناطيسية والفيزياء الكهربية -->
-          <div class="hero-badge">
-            <span class="hero-badge-icon">🧲⚡</span>
-            <span class="hero-badge-text">الفيزياء الكهربية والمغناطيسية</span>
-          </div>
+      <div class="hero-vertical-layout">
 
-          <!-- الاسم واللقب فقط بدون حشو كلامي -->
-          <h1 class="hero-title">
-            <span class="title-name">دكتور محمد عبد الله</span>
-            <span class="title-sub">عميد الفيزياء ⚡</span>
+        <!-- السطر الأول: الاسم واللقب مع أيقونة الباور -->
+        <div class="hero-title-row">
+          <h1 class="hero-title-vertical">
+            <span class="title-name-v">دكتور محمد عبد الله</span>
+            <span class="title-sub-v">
+              <svg class="power-icon-svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d="M13 2L4.5 13.5H11L9 22L19.5 9.5H13L13 2Z"/>
+              </svg>
+              عميد الفيزياء
+            </span>
           </h1>
-
-          <!-- أزرار الإجراء باللونين الرئيسي والثانوي -->
-          <div class="hero-cta-group">
-            <a href="#courses" class="btn btn-primary hero-btn-main">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-              <span>استكشف الكورسات</span>
-            </a>
-            <a href="register.html" class="btn btn-secondary-accent hero-btn-sub">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="8.5" cy="7.5" r="4"></circle>
-                <line x1="20" y1="8" x2="20" y2="14"></line>
-                <line x1="23" y1="11" x2="17" y2="11"></line>
-              </svg>
-              <span>إنشاء حساب جديد</span>
-            </a>
-          </div>
         </div>
 
-        <!-- إطار مخصص ومبهر لصورة صاحب المنصة (د. محمد عبد الله) -->
-        <div class="hero-image-wrapper">
+        <!-- الصورة في المنتصف -->
+        <div class="hero-image-center">
           <div class="hero-glow-sphere primary-glow"></div>
           <div class="hero-glow-sphere secondary-glow"></div>
-          
           <div class="magnetic-field-ring ring-outer"></div>
           <div class="magnetic-field-ring ring-inner"></div>
-
           <div class="hero-card-frame">
             <div class="teacher-photo-container has-photo">
-              <!-- صورة الدكتور محمد عبد الله الاحترافية -->
               <img src="teacher-banner.jpg" alt="دكتور محمد عبد الله - عميد الفيزياء" class="teacher-photo-img" id="teacherPhoto" loading="eager">
             </div>
           </div>
+        </div>
+
+        <!-- الأزرار بعد الصورة -->
+        <div class="hero-cta-group hero-cta-centered">
+          <a href="#courses" class="btn btn-primary hero-btn-main">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span>استكشف الكورسات</span>
+          </a>
+          <a href="register.html" class="btn btn-secondary-accent hero-btn-sub">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7.5" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+            <span>إنشاء حساب جديد</span>
+          </a>
         </div>
 
       </div>

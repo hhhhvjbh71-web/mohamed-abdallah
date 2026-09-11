@@ -185,50 +185,126 @@
   pointer-events: none;
 }
 
+/* ── Google Font import for Arabic ── */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;700;900&display=swap');
+
 /* ── Text block ── */
 .loader-text-block {
   position: relative;
   z-index: 3;
   text-align: center;
-  margin-top: clamp(24px, 5vw, 40px);
+  margin-top: clamp(20px, 4vw, 34px);
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 .loader-text-block.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-.loader-name {
-  font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
-  font-size: clamp(1.35rem, 4vw, 2rem);
-  font-weight: 800;
-  color: #f0f9ff;
-  letter-spacing: 0.02em;
-  text-shadow: 0 0 20px rgba(56,189,248,0.6), 0 0 40px rgba(56,189,248,0.3);
-  line-height: 1.2;
+/* ── اسم "دكتور" كسطر صغير فوق ── */
+.loader-name-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
-.loader-title {
-  font-size: clamp(1rem, 2.8vw, 1.4rem);
+.loader-name-prefix {
+  font-family: 'Cairo', 'Tajawal', 'Segoe UI', sans-serif;
+  font-size: clamp(0.7rem, 2vw, 0.95rem);
   font-weight: 700;
   color: #38bdf8;
-  margin-top: 4px;
-  text-shadow: 0 0 14px rgba(56,189,248,0.8), 0 0 28px rgba(56,189,248,0.4);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  text-shadow: 0 0 12px rgba(56,189,248,0.7);
+  animation: prefix-glow 2s ease-in-out infinite;
 }
 
+@keyframes prefix-glow {
+  0%,100% { opacity: 0.7; letter-spacing: 0.35em; }
+  50%      { opacity: 1;   letter-spacing: 0.45em; text-shadow: 0 0 20px rgba(56,189,248,0.9); }
+}
+
+/* ── الاسم الرئيسي "محمد عبد الله" ── */
+.loader-name {
+  font-family: 'Cairo', 'Tajawal', 'Segoe UI', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #f0f9ff 0%, #38bdf8 40%, #fbbf24 70%, #f0f9ff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: name-shine 3s linear infinite;
+  filter: drop-shadow(0 0 20px rgba(56,189,248,0.4));
+  letter-spacing: 0.01em;
+}
+
+@keyframes name-shine {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── السطر الثاني "عميد الفيزياء" مع خطوط جانبية ── */
+.loader-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.loader-title-line {
+  flex: 1;
+  max-width: 60px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+  border-radius: 99px;
+  animation: line-pulse 2s ease-in-out infinite;
+}
+
+@keyframes line-pulse {
+  0%,100% { opacity: 0.4; max-width: 40px; }
+  50%      { opacity: 1;   max-width: 70px; }
+}
+
+.loader-title-text {
+  font-family: 'Cairo', 'Tajawal', 'Segoe UI', sans-serif;
+  font-size: clamp(1rem, 2.8vw, 1.45rem);
+  font-weight: 800;
+  color: #38bdf8;
+  text-shadow: 0 0 14px rgba(56,189,248,0.8), 0 0 30px rgba(56,189,248,0.4);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.loader-title-icons {
+  font-size: clamp(0.9rem, 2.2vw, 1.2rem);
+  animation: icon-bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes icon-bounce {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-4px) scale(1.15); }
+}
+
+/* ── النص المتحرك في الأسفل ── */
 .loader-sub {
-  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  font-family: 'Cairo', 'Tajawal', 'Segoe UI', sans-serif;
+  font-size: clamp(0.72rem, 1.8vw, 0.88rem);
+  font-weight: 400;
   color: #64748b;
-  margin-top: 10px;
-  letter-spacing: 0.06em;
+  margin-top: 12px;
+  letter-spacing: 0.08em;
   animation: sub-blink 1.5s ease-in-out infinite;
 }
 
 @keyframes sub-blink {
-  0%, 100% { opacity: 0.5; }
+  0%, 100% { opacity: 0.45; }
   50%       { opacity: 1; color: #94a3b8; }
 }
 

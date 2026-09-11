@@ -95,8 +95,16 @@
 
       <!-- text block -->
       <div class="loader-text-block" id="loaderTextBlock">
-        <div class="loader-name">دكتور محمد عبد الله</div>
-        <div class="loader-title">عميد الفيزياء ⚡🧲</div>
+        <div class="loader-name-wrap">
+          <span class="loader-name-prefix">د ك ت و ر</span>
+          <div class="loader-name">محمد عبد الله</div>
+        </div>
+        <div class="loader-title">
+          <span class="loader-title-line"></span>
+          <span class="loader-title-text">عميد الفيزياء</span>
+          <span class="loader-title-icons">⚡🧲</span>
+          <span class="loader-title-line"></span>
+        </div>
         <div class="loader-sub" id="loaderSub">جاري تجهيز عالم الفيزياء...</div>
       </div>
 
