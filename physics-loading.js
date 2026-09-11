@@ -96,7 +96,7 @@
       <!-- text block -->
       <div class="loader-text-block" id="loaderTextBlock">
         <div class="loader-name-wrap">
-          <span class="loader-name-prefix">د ك ت و ر</span>
+          <span class="loader-name-prefix">دكتور</span>
           <div class="loader-name">محمد عبد الله</div>
         </div>
         <div class="loader-title">

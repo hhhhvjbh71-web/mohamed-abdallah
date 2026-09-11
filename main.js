@@ -21,7 +21,7 @@ function initTheme() {
   const savedTheme = localStorage.getItem('physics_theme') || 'dark';
   document.documentElement.setAttribute('data-theme', savedTheme);
 
-  const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn');
+  const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn, .theme-switch');
   themeToggleBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const currentTheme = document.documentElement.getAttribute('data-theme');
