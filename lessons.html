@@ -1994,13 +1994,17 @@
         const f = document.createElement('iframe');
         f.src = src;
         f.allowFullscreen = true;
-        f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        // ❌ أزلنا web-share عشان يمنع مشاركة اللينك
         f.title = item.title;
+        // منع فتح في تاب جديد
+        f.sandbox = 'allow-scripts allow-same-origin allow-presentation allow-popups-to-escape-sandbox';
         wrap.appendChild(f);
 
-        // ── طبقة حماية YouTube ──────────────────────────────────────────
-        // تمنع الطلاب من الضغط على لوجو/بروفايل/اقتراحات يوتيوب
+        // ── طبقة حماية YouTube الشاملة ──────────────────────────────────
         if (src.includes('youtube.com/embed')) {
+
+          // غلاف noscroll فوق الـ iframe بالكامل
           const shield = document.createElement('div');
           shield.id = 'yt-shield';
           shield.style.cssText = [
@@ -2008,44 +2012,51 @@
             'inset:0',
             'z-index:10',
             'background:transparent',
-            'pointer-events:none', // يسمح بالتشغيل / الإيقاف من منتصف الفيديو
+            'pointer-events:none',
           ].join(';');
 
-          // مناطق الحجب الفعلية (corners & top bar where logo/profile sit)
+          // المناطق المحجوبة بالكامل (كل مكان فيه لينك ليوتيوب)
           const blockedZones = [
-            // شريط أعلى اليوتيوب (لوجو + بروفايل)
-            { top:'0',    left:'0',   width:'100%', height:'13%' },
-            // زاوية أسفل يمين (اقتراحات / playlist)
-            { bottom:'0', right:'0',  width:'35%',  height:'18%' },
-            // زاوية أسفل يسار (اسم القناة)
-            { bottom:'0', left:'0',   width:'30%',  height:'10%' },
+            // ── الشريط العلوي كله (لوجو + عنوان + بروفايل) ──
+            { top:'0',    left:'0',   width:'100%', height:'14%' },
+            // ── أسفل يمين: اسم القناة والاقتراحات ──
+            { bottom:'0', right:'0',  width:'55%',  height:'22%' },
+            // ── أسفل يسار: اسم القناة ──
+            { bottom:'0', left:'0',   width:'40%',  height:'12%' },
+            // ── يمين الشاشة كله (فيديوهات مقترحة) ──
+            { top:'0',    right:'0',  width:'12%',  height:'100%' },
           ];
 
           blockedZones.forEach(z => {
             const zone = document.createElement('div');
             zone.style.cssText = [
               'position:absolute',
-              `top:${z.top||'auto'}`,
-              `bottom:${z.bottom||'auto'}`,
-              `left:${z.left||'auto'}`,
-              `right:${z.right||'auto'}`,
+              `top:${z.top || 'auto'}`,
+              `bottom:${z.bottom || 'auto'}`,
+              `left:${z.left || 'auto'}`,
+              `right:${z.right || 'auto'}`,
               `width:${z.width}`,
               `height:${z.height}`,
               'pointer-events:all',
-              'cursor:not-allowed',
+              'cursor:default',
               'background:transparent',
               'z-index:11',
             ].join(';');
-            // منع أي نقر يصل لليوتيوب في هذه المناطق
-            zone.addEventListener('click', e => e.stopPropagation());
-            zone.addEventListener('mousedown', e => e.stopPropagation());
-            zone.addEventListener('touchstart', e => e.stopPropagation(), { passive: false });
+            zone.addEventListener('click',      e => { e.preventDefault(); e.stopPropagation(); });
+            zone.addEventListener('mousedown',  e => { e.preventDefault(); e.stopPropagation(); });
+            zone.addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); }, { passive: false });
+            zone.addEventListener('contextmenu',e => { e.preventDefault(); e.stopPropagation(); });
             shield.appendChild(zone);
           });
 
-          // لازم يكون الـ wrap relative عشان الـ absolute تشتغل
           wrap.style.position = 'relative';
           wrap.appendChild(shield);
+
+          // منع فتح أي نافذة جديدة من داخل الـ iframe
+          window.addEventListener('blur', () => {
+            // لو النافذة فقدت التركيز بعد ثانية من آخر نقر → أعد التركيز
+            setTimeout(() => window.focus(), 500);
+          });
         }
         // ─────────────────────────────────────────────────────────────────
       }
@@ -2057,18 +2068,30 @@
       if (bid) {
         return `https://iframe.mediadelivery.net/embed/${BUNNY_LIB}/${bid}?autoplay=true&preload=true`;
       }
+
+      // معاملات الحماية المضافة لكل رابط يوتيوب:
+      // rel=0         → لا اقتراحات من قنوات أخرى
+      // modestbranding=1 → إخفاء لوجو يوتيوب قدر الإمكان
+      // disablekb=0   → الكيبورد يشتغل (تحكم عادي)
+      // iv_load_policy=3 → إخفاء تعليقات الفيديو
+      const ytParams = 'autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&color=white';
+
       if (vid.includes('youtube.com/watch')) {
         try {
           const v = new URL(vid).searchParams.get('v');
-          return `https://www.youtube.com/embed/${v}?autoplay=1`;
+          return `https://www.youtube.com/embed/${v}?${ytParams}`;
         } catch (e) { }
       }
       if (vid.includes('youtu.be/')) {
         const v = vid.split('youtu.be/')[1].split('?')[0];
-        return `https://www.youtube.com/embed/${v}?autoplay=1`;
+        return `https://www.youtube.com/embed/${v}?${ytParams}`;
       }
-      if (vid.includes('youtube.com/embed/') || vid.includes('mediadelivery.net/embed')) {
-        return vid + (vid.includes('?') ? '&' : '?') + (vid.includes('mediadelivery') ? 'autoplay=true' : 'autoplay=1');
+      if (vid.includes('youtube.com/embed/')) {
+        const base = vid.split('?')[0];
+        return `${base}?${ytParams}`;
+      }
+      if (vid.includes('mediadelivery.net/embed')) {
+        return vid + (vid.includes('?') ? '&' : '?') + 'autoplay=true';
       }
       return vid;
     }
