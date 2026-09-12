@@ -522,6 +522,23 @@
               </div>
             </div>
 
+            <!-- نتائج الاختبارات -->
+            <div class="profile-section-card">
+              <div class="section-header">
+                <div class="section-icon" style="background:rgba(14,165,233,0.12); color:#38bdf8;">📝</div>
+                <div>
+                  <h2 class="section-title">نتائج اختباراتي</h2>
+                  <span style="font-size:0.82rem; color:var(--text-muted);">نتائج جميع الاختبارات التي قمت بأدائها، محفوظة في حسابك</span>
+                </div>
+              </div>
+
+              <div id="testResultsContainer" class="courses-enrolled-list">
+                <p style="font-size:0.9rem; color:var(--text-muted); text-align:center; padding:16px;">
+                  جاري جلب النتائج...
+                </p>
+              </div>
+            </div>
+
           </div>
 
         </div>
@@ -613,6 +630,8 @@
       initInfoForm();
       initPasswordForm();
       renderEnrolledCourses();
+      refreshEnrollmentFromServer();
+      refreshTestResultsFromServer();
     });
 
     function populateProfileUI() {
@@ -838,18 +857,13 @@
     }
 
     // 6. Enrolled Courses List
+    // ملاحظة: القائمة تُبنى من currentUser.enrolledCourses فقط، وهي القيمة
+    // التي تُحدَّث من قاعدة البيانات مباشرة عبر refreshEnrollmentFromServer().
+    // لا يُعتمد على أي علم محلي (مثل مفاتيح phy_act_*) كدليل على التفعيل،
+    // لأن ذلك يخالف مبدأ أن قاعدة البيانات هي المصدر الوحيد لصلاحية الوصول.
     function renderEnrolledCourses() {
       const container = document.getElementById('enrolledCoursesContainer');
-      const enrolled = currentUser.enrolledCourses || [];
-
-      // نتحقق أيضاً من التفعيلات المحفوظة محلياً
-      const activeIds = new Set(enrolled.map(String));
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('phy_act_')) {
-          activeIds.add(key.replace('phy_act_', ''));
-        }
-      }
+      const enrolled = Array.isArray(currentUser.enrolledCourses) ? currentUser.enrolledCourses : [];
 
       const courseNames = {
         'sec1': 'الميكانيكا وقوانين الحركة (أولى ثانوي)',
@@ -857,7 +871,7 @@
         'sec3': 'الفيزياء الحديثة والكهرومغناطيسية (تالتة ثانوي)'
       };
 
-      if (activeIds.size === 0) {
+      if (enrolled.length === 0) {
         container.innerHTML = `
           <div style="text-align:center; padding: 20px; color: var(--text-secondary);">
             <p style="margin-bottom:12px;">لم تقم بتفعيل أي كورس بعد.</p>
@@ -868,7 +882,7 @@
       }
 
       let html = '';
-      activeIds.forEach(id => {
+      enrolled.forEach(id => {
         const title = courseNames[id] || `كورس فيزياء (${id})`;
         html += `
           <div class="course-item-card">
@@ -883,6 +897,112 @@
         `;
       });
       container.innerHTML = html;
+    }
+
+    // جلب حالة التفعيل الحقيقية من قاعدة البيانات (Firestore) عند فتح
+    // الصفحة، بدلاً من الاكتفاء بالنسخة المخزّنة محلياً منذ تسجيل الدخول.
+    // هذا يضمن ظهور أي كورس فُعّل من جهاز/متصفح آخر فور فتح صفحة البروفايل.
+    function waitDbProfile(ms = 6000) {
+      return new Promise((resolve, reject) => {
+        if (window.db) { resolve(window.db); return; }
+        const start = Date.now();
+        const t = setInterval(() => {
+          if (window.db) { clearInterval(t); resolve(window.db); }
+          else if (Date.now() - start > ms) { clearInterval(t); reject(new Error('DB timeout')); }
+        }, 100);
+      });
+    }
+
+    async function refreshEnrollmentFromServer() {
+      try {
+        const db = await waitDbProfile(6000);
+        let docSnap = null;
+
+        if (currentUser.id) {
+          const d = await db.collection('students').doc(currentUser.id).get();
+          if (d.exists) docSnap = d;
+        }
+        if (!docSnap && currentUser.phone) {
+          const q = await db.collection('students').where('phone', '==', currentUser.phone).limit(1).get();
+          if (!q.empty) docSnap = q.docs[0];
+        }
+
+        if (docSnap) {
+          const data = docSnap.data() || {};
+          currentUser.id = currentUser.id || docSnap.id;
+          currentUser.enrolledCourses = Array.isArray(data.enrolledCourses) ? data.enrolledCourses : [];
+          localStorage.setItem('physics_current_user', JSON.stringify(currentUser));
+          renderEnrolledCourses();
+        }
+      } catch (e) {
+        console.warn('[profile] enrollment refresh from server failed:', e.message);
+        // نتجاهل الخطأ ونترك آخر نسخة معروضة كما هي دون افتراض أي تفعيل جديد
+      }
+    }
+
+    // ── نتائج الاختبارات ──────────────────────────────────────────────
+    // تُجلب دائماً من قاعدة البيانات (مجموعة test_results) مرتبطة بحساب
+    // الطالب (بالمعرّف أو رقم الهاتف)، بحيث تظهر النتائج نفسها من أي
+    // جهاز أو متصفح يسجّل به الطالب دخوله.
+    async function refreshTestResultsFromServer() {
+      const container = document.getElementById('testResultsContainer');
+      try {
+        const db = await waitDbProfile(6000);
+        let snap;
+        if (currentUser.id) {
+          snap = await db.collection('test_results').where('studentId', '==', currentUser.id).get();
+        } else if (currentUser.phone) {
+          snap = await db.collection('test_results').where('studentPhone', '==', currentUser.phone).get();
+        } else {
+          snap = { empty: true, docs: [] };
+        }
+
+        if (snap.empty) {
+          container.innerHTML = `
+            <p style="font-size:0.9rem; color:var(--text-muted); text-align:center; padding:16px;">
+              لم تقم بأداء أي اختبار بعد.
+            </p>
+          `;
+          return;
+        }
+
+        const results = snap.docs
+          .map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
+
+        container.innerHTML = results.map(r => {
+          const pct = Math.round(Number(r.percentage || 0));
+          const badgeColor = r.hasPendingManualGrading ? '#f59e0b' : (pct >= 50 ? '#34d399' : '#f87171');
+          const badgeText = r.hasPendingManualGrading
+            ? '⏳ بانتظار تصحيح المدرس'
+            : `${r.totalScore ?? 0} / ${r.totalPossible ?? 0} (${pct}%)`;
+          const dateStr = r.submittedAt ? new Date(r.submittedAt).toLocaleString('ar-EG') : '';
+
+          return `
+            <div class="course-item-card">
+              <div>
+                <div class="course-item-title">📝 ${escapeHtmlProfile(r.testTitle || 'اختبار')}</div>
+                <span style="font-size:0.75rem; color:${badgeColor}; font-weight:800;">${badgeText}</span>
+                ${dateStr ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">${dateStr}</div>` : ''}
+              </div>
+              <a href="test.html?resultId=${encodeURIComponent(r.id)}" class="btn btn-outline btn-sm" style="white-space:nowrap;">
+                عرض التفاصيل ↗
+              </a>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        console.warn('[profile] test results refresh failed:', e.message);
+        container.innerHTML = `
+          <p style="font-size:0.9rem; color:var(--text-muted); text-align:center; padding:16px;">
+            تعذر تحميل نتائج الاختبارات. تحقق من اتصالك بالإنترنت.
+          </p>
+        `;
+      }
+    }
+
+    function escapeHtmlProfile(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
   </script>
 </body>

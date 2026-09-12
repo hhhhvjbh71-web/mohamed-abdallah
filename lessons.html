@@ -534,6 +534,120 @@
       border-radius: 3px;
     }
 
+    /* TESTS SIDEBAR SECTION */
+    .tests-list {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 62vh;
+      overflow-y: auto;
+    }
+
+    .test-card-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card2);
+      padding: 14px;
+      transition: all 0.2s;
+    }
+
+    .test-card-item:hover {
+      border-color: var(--primary);
+    }
+
+    .test-card-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .test-card-meta {
+      font-size: 12px;
+      color: var(--text3);
+      margin-bottom: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .test-card-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 800;
+      padding: 5px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    .test-card-score.pass {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .test-card-score.fail {
+      background: rgba(239, 68, 68, 0.12);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .test-card-score.pending {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .test-card-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .test-card-actions a {
+      flex: 1;
+      text-align: center;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .test-card-actions a.primary-action {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+    }
+
+    .test-card-actions a.primary-action:hover {
+      transform: translateY(-1px);
+    }
+
+    .test-card-actions a.secondary-action {
+      background: transparent;
+      color: var(--text2);
+      border: 1px solid var(--border);
+    }
+
+    .test-card-actions a.secondary-action:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .tests-empty-hint {
+      padding: 24px 16px;
+      text-align: center;
+      color: var(--text3);
+      font-size: 13px;
+    }
+
     .lesson-accordion {
       border-radius: var(--radius-sm);
       margin-bottom: 8px;
@@ -946,6 +1060,26 @@
       transform: none;
     }
 
+    .retry-btn {
+      padding: 11px 26px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+    }
+
+    .retry-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(14, 165, 233, 0.45);
+    }
+
     .activation-error {
       display: none;
       background: rgba(239, 68, 68, 0.1);
@@ -1149,7 +1283,10 @@
     <div class="error-icon">⚠️</div>
     <h2 id="errorTitle">حدث خطأ</h2>
     <p id="errorMsg">لم نتمكن من تحميل بيانات الكورس المطلوب.</p>
-    <a href="index.html">العودة للصفحة الرئيسية</a>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px;">
+      <button type="button" id="errorRetryBtn" class="retry-btn" style="display:none">🔄 إعادة المحاولة</button>
+      <a href="index.html">العودة للصفحة الرئيسية</a>
+    </div>
   </div>
 
   <!-- ACTIVATION GATE (FOR PAID COURSES) -->
@@ -1253,6 +1390,15 @@
           <span style="font-size:12px;color:var(--text3);font-weight:700" id="contentCount"></span>
         </div>
         <div class="lessons-list" id="lessonsList"></div>
+      </div>
+
+      <!-- اختبارات الكورس -->
+      <div class="sidebar-card" id="testsSidebarCard" style="display:none">
+        <div class="sidebar-header">
+          <h3>📝 اختبارات الكورس</h3>
+          <span style="font-size:12px;color:var(--text3);font-weight:700" id="testsCount"></span>
+        </div>
+        <div class="tests-list" id="testsList"></div>
       </div>
     </aside>
   </div>
@@ -1468,15 +1614,93 @@
       badge.className = `header-badge ${isFree ? 'free' : 'paid'}`;
       badge.textContent = isFree ? '🆓 مجاني' : '🔒 كورس مدفوع';
 
-      // Gate check: Free, or already activated in this session/browser, or user already enrolled
-      const activated = getActivation(course.id) || isUserEnrolled(course.id);
-      if (isFree || activated) {
+      // ── التحقق من صلاحية الوصول للكورس ──────────────────────────────
+      // الكورسات المجانية: دخول مباشر بدون أي تحقق.
+      // الكورسات المدفوعة: يُحسم الأمر من قاعدة البيانات فقط (وليس من أي
+      // قيمة محفوظة محلياً في المتصفح)، بحيث يظهر التفعيل بنفس الشكل على
+      // أي جهاز أو متصفح يسجّل به الطالب نفسه دخوله لاحقاً.
+      if (isFree) {
         showState('layout');
         renderContent();
-      } else {
-        showState('gate');
-        document.getElementById('gateCourseTitle').textContent = course.title;
-        renderGateCurriculumPreview();
+        loadCourseTests();
+        return;
+      }
+
+      const loadingTextEl = document.querySelector('#mainLoading .loading-text');
+      if (loadingTextEl) loadingTextEl.textContent = 'جاري التحقق من اشتراكك في هذا الكورس...';
+
+      try {
+        const enrolled = await checkEnrollmentFromServer(course.id);
+        if (enrolled) {
+          showState('layout');
+          renderContent();
+          loadCourseTests();
+        } else {
+          showState('gate');
+          document.getElementById('gateCourseTitle').textContent = course.title;
+          renderGateCurriculumPreview();
+        }
+      } catch (e) {
+        console.warn('[loadCourse] enrollment check failed:', e.message);
+        showEnrollmentCheckError(id);
+      }
+    }
+
+    /* ============================================================
+       5.05 ENROLLMENT CHECK — المصدر الوحيد للحقيقة: قاعدة البيانات
+       يبحث عن مستند الطالب في Firestore (بالمعرّف أولاً ثم برقم الهاتف
+       احتياطاً)، ويرجع حالة الاشتراك الحقيقية بالكورس المطلوب. لا يُعتمد
+       إطلاقاً على أي علم/قيمة محفوظة في localStorage أو sessionStorage
+       كدليل على التفعيل.
+    ============================================================ */
+    async function resolveStudentDocRef(db, u) {
+      if (!u) return null;
+      if (u.id) {
+        const snap = await db.collection('students').doc(u.id).get();
+        if (snap.exists) return { ref: snap.ref, snap };
+      }
+      if (u.phone) {
+        const q = await db.collection('students').where('phone', '==', u.phone).limit(1).get();
+        if (!q.empty) return { ref: q.docs[0].ref, snap: q.docs[0] };
+      }
+      return null;
+    }
+
+    async function checkEnrollmentFromServer(courseId) {
+      let u = null;
+      try { u = JSON.parse(localStorage.getItem('physics_current_user') || 'null'); } catch (e) { }
+
+      // لا يوجد حساب موثّق محلياً على الإطلاق (لن يصل هنا عادة بسبب فحص
+      // تسجيل الدخول في بداية الصفحة، لكن نتحقق للأمان فقط)
+      if (!u || (!u.id && !u.phone)) return false;
+
+      // قد يرمي هذا استثناءً في حال انقطاع الاتصال بقاعدة البيانات،
+      // ويُترك ذلك للمستدعي ليعرض حالة خطأ بدل منح وصول غير موثّق
+      const db = await waitDb(6000);
+      const found = await resolveStudentDocRef(db, u);
+
+      if (!found) return false; // الحساب غير موجود فعلياً في قاعدة البيانات
+
+      const data = found.snap.data() || {};
+      const enrolled = Array.isArray(data.enrolledCourses) ? data.enrolledCourses : [];
+
+      // مزامنة النسخة المحلية (تُستخدم فقط للعرض السريع، مثل صفحة البروفايل)
+      // مع المصدر الحقيقي في قاعدة البيانات — وليس العكس أبداً
+      u.id = u.id || found.ref.id;
+      u.enrolledCourses = enrolled;
+      try { localStorage.setItem('physics_current_user', JSON.stringify(u)); } catch (e) { }
+
+      return enrolled.some(cid => String(cid) === String(courseId));
+    }
+
+    function showEnrollmentCheckError(courseId) {
+      showState('error');
+      document.getElementById('errorTitle').textContent = 'تعذر التحقق من اشتراكك';
+      document.getElementById('errorMsg').textContent = 'لم نتمكن من التحقق من حالة تفعيل هذا الكورس لحسابك بسبب مشكلة في الاتصال بالإنترنت أو بقاعدة البيانات. تأكد من اتصالك بالإنترنت ثم أعد المحاولة.';
+      const retryBtn = document.getElementById('errorRetryBtn');
+      if (retryBtn) {
+        retryBtn.style.display = 'inline-flex';
+        retryBtn.onclick = () => loadCourse(courseId);
       }
     }
 
@@ -1540,7 +1764,7 @@
     }
 
     /* ============================================================
-       6. ACTIVATION LOGIC (SECURE & LINKED TO DASHBOARD)
+       6. ACTIVATION LOGIC (SECURE & LINKED TO ACCOUNT IN DATABASE)
     ============================================================ */
     async function activateCourse() {
       const code = document.getElementById('activationCodeInput').value.trim().toUpperCase();
@@ -1563,17 +1787,21 @@
       try {
         const res = await verifyCode(code, String(course.id));
         if (res.valid) {
+          // markUsed يربط التفعيل بحساب الطالب في قاعدة البيانات، ويرمي
+          // استثناءً إذا فشل هذا الربط تحديداً — حتى لا نُظهر رسالة نجاح
+          // للطالب بينما لم يُحفظ أي شيء فعلياً في قاعدة البيانات
           await markUsed(code);
-          saveActivation(String(course.id), code);
           showToast('🎉 تم تفعيل الكورس بنجاح! مرحباً بك يا بطل ⚡', 'success');
           showState('layout');
           renderContent();
+          loadCourseTests();
         } else {
           setActErr(res.message || 'كود التفعيل غير صالح أو تم استخدامه مسبقاً.');
           inp.classList.add('error');
         }
       } catch (e) {
-        setActErr('تعذر التحقق من الكود حالياً. يرجى التحقق من اتصال الإنترنت.');
+        setActErr(e && e.userMessage ? e.userMessage : 'تعذر التحقق من الكود حالياً. يرجى التحقق من اتصال الإنترنت والمحاولة مجدداً.');
+        inp.classList.add('error');
       } finally {
         btn.disabled = false;
         btn.textContent = '🔑 تفعيل الكورس';
@@ -1624,10 +1852,6 @@
           }
         } catch (e) { }
       }
-      // Allow master/demo test code for testing
-      if (code === 'TEST-PHYSICS-2026') {
-        return { valid: true };
-      }
       return { valid: false, message: 'كود التفعيل غير مسجل بالنظام. تواصل مع دكتور محمد عبد الله.' };
     }
 
@@ -1643,15 +1867,15 @@
         usedByPhone: u.phone || ''
       };
 
-      // Update in Firebase Firestore
+      // Update code doc in Firestore (غير حرج لعملية الربط بالحساب نفسها)
       try {
         const db = await waitDb(4000);
         await db.collection('codes').doc(code).update(upd);
       } catch (e) {
-        console.warn('[markUsed] Firestore update failed:', e.message);
+        console.warn('[markUsed] Firestore code doc update failed:', e.message);
       }
 
-      // Update in localStorage
+      // Update legacy localStorage vouchers cache (النظام القديم كما هو)
       for (const key of ['iraqiplatform_codes', 'alsaqr_vouchers']) {
         try {
           const list = JSON.parse(localStorage.getItem(key) || '[]');
@@ -1663,27 +1887,42 @@
         } catch (e) { }
       }
 
-      // Save enrollment into student profile
+      // ── الخطوة الحرجة: ربط التفعيل بحساب الطالب داخل قاعدة البيانات ──
+      // هذا هو مصدر الحقيقة الوحيد لصلاحية الوصول للكورس. إن فشلت هذه
+      // الخطوة، تُرمى رسالة خطأ صريحة بدل الإبلاغ بنجاح وهمي، لأن أي
+      // اعتماد على المتصفح فقط (localStorage/sessionStorage) هنا يجعل
+      // التفعيل يختفي عند تغيير الجهاز أو المتصفح أو حذف بيانات التصفح.
+      if (!u || (!u.phone && !u.id)) {
+        const err = new Error('No authenticated user found while activating course');
+        err.userMessage = 'تعذر تحديد حسابك الحالي. يرجى تسجيل الدخول مجدداً ثم إعادة المحاولة.';
+        throw err;
+      }
+
       try {
-        if (u && (u.phone || u.id)) {
-          if (!Array.isArray(u.enrolledCourses)) u.enrolledCourses = [];
-          if (!u.enrolledCourses.includes(String(course.id))) {
-            u.enrolledCourses.push(String(course.id));
-          }
-          localStorage.setItem('physics_current_user', JSON.stringify(u));
-          // Sync with Firestore student document
-          try {
-            const db = await waitDb(2000);
-            if (u.id) {
-              await db.collection('students').doc(u.id).update({
-                enrolledCourses: u.enrolledCourses
-              });
-            }
-          } catch (syncErr) {
-            console.warn('[markUsed] Student doc enrollment sync:', syncErr.message);
-          }
+        const db = await waitDb(6000);
+        const found = await resolveStudentDocRef(db, u);
+
+        if (!found) {
+          const err = new Error('Student document not found in Firestore for id/phone: ' + (u.id || u.phone));
+          err.userMessage = 'تعذر العثور على حسابك في قاعدة البيانات. تواصل مع الدعم الفني.';
+          throw err;
         }
-      } catch (e) { }
+
+        const existing = Array.isArray(found.snap.data().enrolledCourses) ? found.snap.data().enrolledCourses.slice() : [];
+        if (!existing.includes(String(course.id))) {
+          existing.push(String(course.id));
+        }
+        await found.ref.update({ enrolledCourses: existing });
+
+        // مزامنة النسخة المحلية للعرض فقط (وليست مصدر الصلاحية بأي حال)
+        u.id = u.id || found.ref.id;
+        u.enrolledCourses = existing;
+        localStorage.setItem('physics_current_user', JSON.stringify(u));
+      } catch (e) {
+        console.warn('[markUsed] Student doc enrollment sync failed:', e.message);
+        if (!e.userMessage) e.userMessage = 'تعذر حفظ التفعيل في قاعدة البيانات. تحقق من اتصال الإنترنت وحاول مجدداً.';
+        throw e;
+      }
     }
 
     function setActErr(msg) {
@@ -1692,26 +1931,110 @@
       el.classList.add('visible');
     }
 
-    function saveActivation(cid, code) {
-      const data = { code, date: new Date().toISOString() };
-      const key = `phy_act_${cid}`;
-      sessionStorage.setItem(key, JSON.stringify(data));
-      localStorage.setItem(key, JSON.stringify(data));
-    }
+    /* ============================================================
+       6.5. اختبارات الكورس (Tests) — تُجلب من قاعدة البيانات فقط
+       (مجموعة Firestore باسم "tests")، وتُعرض في الشريط الجانبي مع
+       آخر نتيجة للطالب إن وجدت. لا تظهر هذه القائمة إلا بعد التأكد
+       من صلاحية وصول الطالب للكورس (تُستدعى من loadCourse/activateCourse
+       بعد نجاح التحقق فقط).
+    ============================================================ */
+    async function loadCourseTests() {
+      const card = document.getElementById('testsSidebarCard');
+      const listEl = document.getElementById('testsList');
+      const countEl = document.getElementById('testsCount');
+      if (!card || !listEl) return;
 
-    function getActivation(cid) {
-      const key = `phy_act_${cid}`;
-      return JSON.parse(sessionStorage.getItem(key) || localStorage.getItem(key) || 'null');
-    }
+      let u = null;
+      try { u = JSON.parse(localStorage.getItem('physics_current_user') || 'null'); } catch (e) { }
 
-    function isUserEnrolled(cid) {
       try {
-        const u = JSON.parse(localStorage.getItem('physics_current_user') || '{}');
-        if (u && Array.isArray(u.enrolledCourses)) {
-          return u.enrolledCourses.some(id => String(id) === String(cid));
+        const db = await waitDb(6000);
+        const snap = await db.collection('tests').where('courseId', '==', String(course.id)).get();
+
+        if (snap.empty) {
+          // لا توجد اختبارات لهذا الكورس حالياً — لا داعي لإظهار القسم
+          card.style.display = 'none';
+          return;
         }
-      } catch (e) { }
-      return false;
+
+        const tests = snap.docs.map(d => normalizeTestSummary(d.data(), d.id));
+
+        // جلب آخر نتيجة لكل اختبار لهذا الطالب تحديداً (من قاعدة البيانات)
+        const withResults = await Promise.all(tests.map(async t => {
+          let lastResult = null;
+          try {
+            if (u && (u.id || u.phone)) {
+              let q = db.collection('test_results').where('testId', '==', t.id);
+              q = u.id ? q.where('studentId', '==', u.id) : q.where('studentPhone', '==', u.phone);
+              const rSnap = await q.get();
+              if (!rSnap.empty) {
+                const sorted = rSnap.docs
+                  .map(d => ({ id: d.id, ...d.data() }))
+                  .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
+                lastResult = sorted[0];
+              }
+            }
+          } catch (e) {
+            console.warn('[loadCourseTests] result lookup failed for test', t.id, e.message);
+          }
+          return { ...t, lastResult };
+        }));
+
+        card.style.display = 'block';
+        countEl.textContent = `${withResults.length} اختبار`;
+        renderTestsList(withResults);
+      } catch (e) {
+        console.warn('[loadCourseTests] failed to load tests:', e.message);
+        // فشل الاتصال لا يمنع الطالب من مشاهدة الدروس — نخفي القسم بصمت
+        card.style.display = 'none';
+      }
+    }
+
+    function normalizeTestSummary(raw, id) {
+      const questions = raw.questions || raw.items || [];
+      return {
+        id,
+        title: raw.title || raw.name || raw.testName || 'اختبار',
+        description: raw.description || raw.desc || raw.testDescription || '',
+        questionsCount: Array.isArray(questions) ? questions.length : 0
+      };
+    }
+
+    function renderTestsList(tests) {
+      const listEl = document.getElementById('testsList');
+      if (!tests.length) {
+        listEl.innerHTML = `<div class="tests-empty-hint">لا توجد اختبارات متاحة لهذا الكورس حالياً.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = tests.map(t => {
+        const startUrl = `test.html?id=${encodeURIComponent(t.id)}&courseId=${encodeURIComponent(course.id)}`;
+        let scoreBadge = '';
+        let actions = `<a href="${startUrl}" class="primary-action">🚀 بدء الاختبار</a>`;
+
+        if (t.lastResult) {
+          const r = t.lastResult;
+          const pct = Number(r.percentage || 0);
+          const cls = r.hasPendingManualGrading ? 'pending' : (pct >= 50 ? 'pass' : 'fail');
+          const label = r.hasPendingManualGrading
+            ? `⏳ بانتظار تصحيح جزء من الأسئلة`
+            : `📊 آخر نتيجة: ${r.totalScore ?? 0} / ${r.totalPossible ?? 0} (${Math.round(pct)}%)`;
+          scoreBadge = `<div class="test-card-score ${cls}">${label}</div>`;
+          actions = `
+            <a href="test.html?resultId=${encodeURIComponent(r.id)}" class="secondary-action">📄 عرض النتيجة</a>
+            <a href="${startUrl}" class="primary-action">🔁 إعادة الاختبار</a>
+          `;
+        }
+
+        return `
+          <div class="test-card-item">
+            <div class="test-card-title">📝 ${esc(t.title)}</div>
+            <div class="test-card-meta"><span>❓ ${t.questionsCount} سؤال</span></div>
+            ${scoreBadge}
+            <div class="test-card-actions">${actions}</div>
+          </div>
+        `;
+      }).join('');
     }
 
     /* ============================================================
@@ -2144,6 +2467,8 @@
       showState('error');
       document.getElementById('errorTitle').textContent = title;
       document.getElementById('errorMsg').textContent = msg;
+      const retryBtn = document.getElementById('errorRetryBtn');
+      if (retryBtn) retryBtn.style.display = 'none';
     }
 
     function goBackToPlatform() {
